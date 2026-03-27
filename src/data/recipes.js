@@ -1,0 +1,236 @@
+// Sample data for reference / tests only — the app loads recipes from Google Drive when configured (see README).
+export const FALLBACK_RECIPES = [
+  {
+    id: "quinoa",
+    title: "קינואה מוקפצת",
+    category: "תוספות",
+    tags: ["צמחוני", "צהריים"],
+    emoji: "🌾",
+    cookTime: "30 דק׳",
+    servings: 4,
+    ingredients: [
+      { id: "i1", name: "קינואה", amount: 1, unit: "כוס" },
+      { id: "i2", name: "מים רותחים", amount: 2, unit: "כוס" },
+      { id: "i3", name: "גזר קצוץ", amount: 1, unit: "" },
+      { id: "i4", name: "בצל קצוץ", amount: 0.5, unit: "" },
+      { id: "i5", name: "סילאן", amount: 1, unit: "כף" },
+      { id: "i6", name: "רוטב סויה", amount: 3.5, unit: "כף" },
+      { id: "i7", name: "כורכום", amount: 0, unit: "קורט" },
+      { id: "i8", name: "פלפל לבן", amount: 0, unit: "קורט" },
+      { id: "i9", name: "מלח", amount: 0, unit: "קורט" },
+    ],
+    sections: [
+      {
+        title: "",
+        steps: [
+          {
+            id: "s1",
+            text: "משרים את הקינואה לפחות חצי שעה, שוטפים אותה היטב במסננת ומשאירים שהמים יתנקזו עד הסוף.",
+            timer: 1800,
+            warning: null,
+          },
+          {
+            id: "s2",
+            text: "מטגנים את הבצל והגזר בסיר הבישול על אש בינונית, עד שהבצל משחים (והגזר מתרכך) כ-5 דקות.",
+            timer: 300,
+            warning: null,
+          },
+          {
+            id: "s3",
+            text: "מוסיפים את התבלינים (ללא המלח) ואת הקינואה ומטגנים אותם על אש גבוהה כדקה יחד עם הירקות.",
+            timer: 60,
+            warning: null,
+          },
+          {
+            id: "s4",
+            text: "מוסיפים את המים, הסויה, המלח והסילאן ומבשלים עם מכסה סגור ועל אש נמוכה 20 דקות.",
+            timer: 1200,
+            warning: null,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "turkey-meatballs",
+    title: "כדורי הודו ברוטב עגבניות",
+    category: "מנות עיקריות",
+    tags: ["צהריים", "אירוח"],
+    emoji: "🍅",
+    cookTime: "60 דק׳",
+    servings: 6,
+    ingredients: [
+      { id: "i1", name: "הודו אדום טחון", amount: 1, unit: "ק״ג" },
+      { id: "i2", name: "בצל קצוץ דק", amount: 1, unit: "" },
+      { id: "i3", name: "סולת", amount: 4, unit: "כף" },
+      { id: "i4", name: "עגבניות רכות או שימורים", amount: 2, unit: "ק״ג" },
+      { id: "i5", name: "שן שום קצוצה", amount: 1, unit: "" },
+      { id: "i6", name: "רסק עגבניות", amount: 1, unit: "מיכל" },
+      { id: "i7", name: "מים לפי הסמיכות", amount: 0, unit: "" },
+      { id: "i8", name: "מלח, פלפל, אורגנו, סוכר", amount: 0, unit: "" },
+    ],
+    sections: [
+      {
+        title: "",
+        steps: [
+          { id: "s1", text: "מערבבים את ההודו, הבצל והסולת בקערה ומכדררים לכדורים.", timer: null, warning: null },
+          { id: "s2", text: "מטגנים את השום והעגבניות כ-5 דקות.", timer: 300, warning: null },
+          {
+            id: "s3",
+            text: "מוסיפים את שאר המרכיבים ומבשלים כ-10 דקות.",
+            timer: 600,
+            warning: "כשמוסיפים מים — לזכור שהעוף מוציא נוזלים, לא להוסיף יותר מדי.",
+          },
+          { id: "s4", text: "מוסיפים את הכדורים ומבשלים כ-45 דקות.", timer: 2700, warning: null },
+        ],
+      },
+    ],
+  },
+  {
+    id: "orange-soup",
+    title: "מרק כתומים",
+    category: "מרקים",
+    tags: ["צמחוני", "צהריים", "אירוח"],
+    emoji: "🥕",
+    cookTime: "50 דק׳",
+    servings: 6,
+    ingredients: [
+      { id: "i1", name: "שמן זית", amount: 3, unit: "כף" },
+      { id: "i2", name: "בצל אדום קצוץ", amount: 0.67, unit: "כוס" },
+      { id: "i3", name: "שיני שום כתושות", amount: 5, unit: "" },
+      { id: "i4", name: "ירקות כתומים (דלעת, גזר, בטטה)", amount: 2.5, unit: "ק״ג" },
+      { id: "i5", name: "פפריקה", amount: 1, unit: "כפית" },
+      { id: "i6", name: "פלפל אנגלי או בהרט", amount: 1, unit: "כפית" },
+      { id: "i7", name: "פפריקה חריפה", amount: 0, unit: "קורט" },
+      { id: "i8", name: "מלח", amount: 2, unit: "כפית" },
+      { id: "i9", name: "מים", amount: 6, unit: "כוס" },
+    ],
+    sections: [
+      {
+        title: "",
+        steps: [
+          {
+            id: "s1",
+            text: "מחממים שמן בסיר גדול ומטגנים בצל עד שמזהיב. מוסיפים שום ומטגנים דקה. מוסיפים ירקות, תבלינים ומים ומביאים לרתיחה.",
+            timer: null,
+            warning: null,
+          },
+          {
+            id: "s2",
+            text: "מכסים הסיר ומבשלים על להבה בינונית-נמוכה 30–40 דקות עד שהירקות רכים.",
+            timer: 2100,
+            warning: null,
+          },
+          {
+            id: "s3",
+            text: "מסירים מהכיריים ומעבדים בבלנדר למרק חלק. מחזירים לסיר ומבשלים 5 דקות נוספות.",
+            timer: 300,
+            warning: null,
+          },
+          {
+            id: "s4",
+            text: "יוצקים לקעריות. ניתן להוסיף מעט חלב קוקוס לטעם עשיר יותר.",
+            timer: null,
+            warning: null,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "yellow-curry",
+    title: "תבשיל קארי צהוב",
+    category: "מנות עיקריות",
+    tags: ["צהריים", "אירוח"],
+    emoji: "🍛",
+    cookTime: "25 דק׳",
+    servings: 4,
+    ingredients: [
+      { id: "i1", name: "חזה עוף חתוך לחתיכות", amount: 1, unit: "" },
+      { id: "i2", name: "שמן קנולה או קוקוס", amount: 1, unit: "כף" },
+      { id: "i3", name: "בצל קצוץ לרצועות", amount: 1, unit: "" },
+      { id: "i4", name: "שיני שום קצוצות", amount: 5, unit: "" },
+      { id: "i5", name: "גמבה אדומה", amount: 1, unit: "" },
+      { id: "i6", name: "שעועית ירוקה", amount: 100, unit: "גרם" },
+      { id: "i7", name: "חלב קוקוס", amount: 500, unit: "מ״ל" },
+      { id: "i8", name: "משחת קארי צהוב", amount: 2, unit: "כף" },
+      { id: "i9", name: "רוטב סויה", amount: 1, unit: "כף" },
+      { id: "i10", name: "חמאת בוטנים טבעית", amount: 3, unit: "כף" },
+    ],
+    sections: [
+      {
+        title: "",
+        steps: [
+          { id: "s1", text: "מחממים שמן במחבת עמוקה ומטגנים בצל עד שנהיה שקוף.", timer: null, warning: null },
+          {
+            id: "s2",
+            text: "מוסיפים שום, גמבה ושעועית ומבשלים כ-2 דקות. מוסיפים עוף ומבשלים עד שמשחים מעט.",
+            timer: 120,
+            warning: null,
+          },
+          {
+            id: "s3",
+            text: "תוחמים הירקות בצד, מוסיפים שמן ומטגנים את משחת הקארי עד שהשמן נפרד ממנה.",
+            timer: null,
+            warning: "חשוב — לא לדלג על טיגון הקארי! זה קריטי לפתיחת הטעמים.",
+          },
+          {
+            id: "s4",
+            text: "מוסיפים חמאת בוטנים ורוטב סויה, מערבבים ומבשלים 2 דקות.",
+            timer: 120,
+            warning: null,
+          },
+          {
+            id: "s5",
+            text: "מוסיפים חלב קוקוס, מנמיכים אש ומבשלים 5–7 דקות עד שהעוף מוכן. מגישים מעל אורז.",
+            timer: 360,
+            warning: null,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "smashed-potatoes",
+    title: "תפוחי אדמה מעוכים",
+    category: "תוספות",
+    tags: ["צמחוני", "אירוח"],
+    emoji: "🥔",
+    cookTime: "45 דק׳",
+    servings: 4,
+    ingredients: [
+      { id: "i1", name: "תפוחי אדמה", amount: 1, unit: "ק״ג" },
+      { id: "i2", name: "מלח גס", amount: 1, unit: "כף" },
+      { id: "i3", name: "שמן זית", amount: 0.5, unit: "כוס" },
+      { id: "i4", name: "גבעולי טימין טרי", amount: 4.5, unit: "" },
+    ],
+    sections: [
+      {
+        title: "",
+        steps: [
+          {
+            id: "s1",
+            text: "שוטפים תפוחי האדמה. מכסים במים עם כף מלח, מביאים לרתיחה ומבשלים 10 דקות עד שרכים.",
+            timer: 600,
+            warning: null,
+          },
+          { id: "s2", text: "מוציאים ונותנים להתקרר על מגבות נייר.", timer: 300, warning: null },
+          {
+            id: "s3",
+            text: "מרפדים תבנית בנייר אפיה, מורחים שמן זית. מניחים תפוחי האדמה ומועכים בתחתית בקבוק לשליש גובהם.",
+            timer: null,
+            warning: null,
+          },
+          {
+            id: "s4",
+            text: "יוצקים שמן זית בנדיבות, מפזרים טימין ומלח גס. אופים 230 מעלות כ-20 דקות עד שפריכים ושחומים.",
+            timer: 1200,
+            warning: null,
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export const DEFAULT_TAG_EMOJI = { צהריים: "🕛", מתוקים: "🍰", צמחוני: "🥦", אירוח: "🥂" };

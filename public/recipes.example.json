@@ -1,0 +1,27 @@
+[
+  {
+    "id": "example",
+    "title": "דוגמה",
+    "category": "תוספות",
+    "tags": ["צהריים"],
+    "emoji": "🍳",
+    "cookTime": "15 דק׳",
+    "servings": 2,
+    "ingredients": [
+      { "id": "i1", "name": "מים", "amount": 1, "unit": "כוס" }
+    ],
+    "sections": [
+      {
+        "title": "",
+        "steps": [
+          {
+            "id": "s1",
+            "text": "בשלו לפי הטעם.",
+            "timer": null,
+            "warning": null
+          }
+        ]
+      }
+    ]
+  }
+]
