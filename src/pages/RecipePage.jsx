@@ -412,7 +412,34 @@ export function RecipePage({ recipe, onBack, favs, toggleFav, C, dark }) {
             )}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {recipe.sections.flatMap((sec) => sec.steps).map((step, idx) => {
+            {recipe.sections.map((sec, secIdx) => {
+              const showSectionHeading =
+                recipe.sections.length > 1 && !(secIdx === 0 && sec.title === "הכנה");
+              const headingText = (sec.title && sec.title.trim()) || `חלק ${secIdx + 1}`;
+              return (
+                <div
+                  key={`sec-${secIdx}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    marginTop: secIdx > 0 ? 18 : 0,
+                  }}
+                >
+                  {showSectionHeading && (
+                    <h3
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 900,
+                        color: textMain,
+                        margin: "0 0 4px",
+                        letterSpacing: "-0.2px",
+                      }}
+                    >
+                      {headingText}
+                    </h3>
+                  )}
+                  {sec.steps.map((step, idx) => {
               const isDone = done[step.id];
               return (
                 <div
@@ -503,6 +530,9 @@ export function RecipePage({ recipe, onBack, favs, toggleFav, C, dark }) {
                       {step.timer && !isDone && <StepTimer stepId={step.id} seconds={step.timer} C={C} />}
                     </div>
                   </div>
+                </div>
+              );
+                  })}
                 </div>
               );
             })}

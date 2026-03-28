@@ -23,7 +23,7 @@ export function useRecipes() {
         recipes: [],
         tagEmoji: mergeTagEmoji(),
         error:
-          "חסר מזהה קובץ או תיקייה ב-Google Drive. הוסיפו ל-.env את VITE_RECIPES_FILE_ID (קובץ JSON אחד) או VITE_RECIPES_FOLDER_ID (תיקייה עם קבצי JSON). בלי זה האפליקציה לא יכולה לטעון מתכונים מ-Drive.",
+          "חסר מזהה קובץ או תיקייה ב-Google Drive. הוסיפו ל-.env את VITE_RECIPES_FILE_ID (קובץ .docx אחד) או VITE_RECIPES_FOLDER_ID (תיקייה עם קבצי .docx). בלי זה האפליקציה לא יכולה לטעון מתכונים מ-Drive.",
       };
     }
     if (mode === "static") {
@@ -32,7 +32,7 @@ export function useRecipes() {
         recipes: [],
         tagEmoji: mergeTagEmoji(),
         error:
-          "אין הגדרת Google Drive. הוסיפו ל-.env: (א) VITE_GOOGLE_CLIENT_ID + VITE_RECIPES_FILE_ID או VITE_RECIPES_FOLDER_ID לכניסה עם Google, או (ב) VITE_GOOGLE_API_KEY + VITE_RECIPES_FILE_ID לקובץ ציבורי. המתכונים לא נטענים מקובץ מקומי באפליקציה.",
+          "אין הגדרת Google Drive. הוסיפו ל-.env: (א) VITE_GOOGLE_CLIENT_ID + VITE_RECIPES_FILE_ID או VITE_RECIPES_FOLDER_ID לכניסה עם Google, או (ב) VITE_GOOGLE_API_KEY + VITE_RECIPES_FILE_ID לקובץ .docx ציבורי. המתכונים לא נטענים מקובץ מקומי באפליקציה.",
       };
     }
     if (mode === "api_key") {
@@ -66,7 +66,7 @@ export function useRecipes() {
     } catch (e) {
       const msg =
         e instanceof ZodError
-          ? `Invalid recipes JSON: ${e.issues[0]?.path?.join(".") || "?"} — ${e.issues[0]?.message}`
+          ? `נתוני מתכון לא תקינים: ${e.issues[0]?.path?.join(".") || "?"} — ${e.issues[0]?.message}`
           : e instanceof Error
             ? e.message
             : String(e);
@@ -113,7 +113,7 @@ export function useRecipes() {
       }
       const msg =
         e instanceof ZodError
-          ? `Invalid recipes JSON: ${e.issues[0]?.path?.join(".") || "?"} — ${e.issues[0]?.message}`
+          ? `נתוני מתכון לא תקינים: ${e.issues[0]?.path?.join(".") || "?"} — ${e.issues[0]?.message}`
           : e instanceof Error
             ? e.message
             : String(e);

@@ -30,23 +30,3 @@ export const RecipeSchema = z.object({
   ingredients: z.array(IngredientSchema),
   sections: z.array(SectionSchema),
 });
-
-export const RecipesPayloadSchema = z.union([
-  z.array(RecipeSchema),
-  z.object({
-    recipes: z.array(RecipeSchema),
-    tagEmoji: z.record(z.string()).optional(),
-  }),
-]);
-
-/**
- * @param {unknown} data
- * @returns {{ recipes: import("zod").infer<typeof RecipeSchema>[], tagEmoji?: Record<string, string> }}
- */
-export function parseRecipesPayload(data) {
-  const parsed = RecipesPayloadSchema.parse(data);
-  if (Array.isArray(parsed)) {
-    return { recipes: parsed, tagEmoji: undefined };
-  }
-  return { recipes: parsed.recipes, tagEmoji: parsed.tagEmoji };
-}
