@@ -26,6 +26,7 @@ export default function App() {
     status,
     recipes,
     tagEmoji,
+    recipesSource,
     error,
     allCats,
     allTags,
@@ -71,6 +72,7 @@ export default function App() {
           allCats={allCats}
           allTags={allTags}
           tagEmoji={tagEmoji}
+          onRefreshFromDrive={recipesSource === "cache" ? retry : undefined}
         />
       ) : (
         selected && <RecipePage recipe={selected} onBack={goBack} favs={favs} toggleFav={toggleFav} />

@@ -54,9 +54,6 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
           <div className="recipe-page__tags">
             <span className="recipe-page__tag recipe-page__tag--primary">{recipe.category}</span>
             <span className="recipe-page__tag recipe-page__tag--muted">⏱ {recipe.cookTime}</span>
-            <span className="recipe-page__tag recipe-page__tag--muted">
-              👤 {recipe.servings} מנות
-            </span>
             {recipe.tags.map((t) => (
               <span key={t} className="recipe-page__tag recipe-page__tag--muted">
                 {t}
@@ -65,7 +62,7 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
           </div>
 
           <div className="recipe-page__scale">
-            <span className="recipe-page__scale-label">מנות:</span>
+            <span className="recipe-page__scale-label">כמות המתכון:</span>
             <button
               type="button"
               className="recipe-page__scale-btn"
@@ -73,7 +70,12 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
             >
               −
             </button>
-            <span className="recipe-page__scale-value">{fmtAmt(recipe.servings, scale)}</span>
+            <span className="recipe-page__scale-value">
+              <span>×</span>
+              <span className="recipe-page__scale-value-amount">
+              {fmtAmt(1, scale)}
+              </span>
+            </span>
             <button type="button" className="recipe-page__scale-btn" onClick={() => setScale((s) => s + 0.5)}>
               +
             </button>
@@ -122,7 +124,9 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
                     <span
                       className={`recipe-page__ing-amt${isChecked ? " recipe-page__ing-amt--checked" : ""}`}
                     >
-                      {fmtAmt(ing.amount, scale)} {ing.unit}
+                      <span className="recipe-page__ing-amt-amount">
+                        {fmtAmt(ing.amount, scale)}
+                      </span> {ing.unit}
                     </span>
                   )}
                 </div>

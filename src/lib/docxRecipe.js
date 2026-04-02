@@ -23,7 +23,7 @@ export async function recipeFromDocxArrayBuffer(fileId, fileName, arrayBuffer) {
     tags: [],
     emoji: "📄",
     cookTime: "—",
-    servings: 4,
+    servings: 1,
     ingredients: parsed.ingredients,
     sections: parsed.sections,
   };

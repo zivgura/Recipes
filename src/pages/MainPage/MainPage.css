@@ -36,6 +36,23 @@
   font-weight: 600;
 }
 
+.main-page__sync {
+  display: inline;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: var(--color-brand);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.main-page__sync:hover {
+  opacity: 0.85;
+}
+
 .main-page__search-wrap {
   position: relative;
   margin-bottom: 14px;

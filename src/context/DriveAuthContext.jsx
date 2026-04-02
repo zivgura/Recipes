@@ -1,6 +1,7 @@
 import { createContext, useMemo, useState, useCallback } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { clearStoredAccessToken, getStoredAccessToken, storeAccessToken } from "../lib/driveAuthStorage.js";
+import { clearCachedRecipes } from "../lib/recipeCache.js";
 
 export const DriveAuthContext = createContext({
   accessToken: null,
@@ -26,6 +27,7 @@ export function DriveAuthProvider({ children }) {
 
   const logout = useCallback(() => {
     clearStoredAccessToken();
+    clearCachedRecipes();
     setAccessToken(null);
   }, []);
 

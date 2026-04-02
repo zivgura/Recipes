@@ -12,6 +12,7 @@ export function MainPage({
   allCats,
   allTags,
   tagEmoji,
+  onRefreshFromDrive,
 }) {
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState(null);
@@ -46,6 +47,15 @@ export function MainPage({
           </h1>
           <p className="main-page__subtitle">
             {recipes.length} מתכונים · {favs.length} מועדפים
+            {onRefreshFromDrive && (
+              <>
+                {" "}
+                ·{" "}
+                <button type="button" className="main-page__sync" onClick={onRefreshFromDrive}>
+                  עדכן מ-Google Drive
+                </button>
+              </>
+            )}
           </p>
         </div>
 
