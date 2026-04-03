@@ -12,13 +12,6 @@ export default function App() {
       return false;
     }
   });
-  const [favs, setFavs] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("rcp_favs") || "[]");
-    } catch {
-      return [];
-    }
-  });
   const [page, setPage] = useState("main");
   const [selected, setSelected] = useState(null);
 
@@ -44,13 +37,6 @@ export default function App() {
       localStorage.setItem("rcp_dark", dark);
     } catch {}
   }, [dark]);
-  useEffect(() => {
-    try {
-      localStorage.setItem("rcp_favs", JSON.stringify(favs));
-    } catch {}
-  }, [favs]);
-
-  const toggleFav = (id) => setFavs((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]));
   const openRecipe = (r) => {
     setSelected(r);
     setPage("recipe");
@@ -66,8 +52,6 @@ export default function App() {
       page === "main" ? (
         <MainPage
           onSelect={openRecipe}
-          favs={favs}
-          toggleFav={toggleFav}
           recipes={recipes}
           allCats={allCats}
           allTags={allTags}
@@ -75,7 +59,7 @@ export default function App() {
           onRefreshFromDrive={recipesSource === "cache" ? retry : undefined}
         />
       ) : (
-        selected && <RecipePage recipe={selected} onBack={goBack} favs={favs} toggleFav={toggleFav} />
+        selected && <RecipePage recipe={selected} onBack={goBack} />
       )
     ) : null;
 

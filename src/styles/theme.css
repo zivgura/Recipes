@@ -3,42 +3,42 @@
  * Theme switches via `data-theme="dark"` on the document root (see App.jsx).
  */
 :root {
-  /* Brand */
-  --color-brand: #ff7043;
-  --color-brand-faint: #fff0ec;
-  --color-brand-light: #ffb39e;
-  --color-brand-border-subtle: #ff704322;
-  --color-brand-border-medium: #ff704344;
-  --color-accent: #e85d2f;
-  --color-accent-faint: #fff0ec;
+  /* Brand — orange accent + teal/mint system (bright mode) */
+  --color-brand: #000000;
+  --color-brand-faint: #d9f2f0;
+  --color-brand-light: #87d0c9;
+  --color-brand-border-subtle: #87d0c9;
+  --color-brand-border-medium: #87d0c966;
+  --color-accent: #000001;
+  --color-accent-faint: #00000111;
 
   /* Surfaces */
-  --color-page-bg: #fff9f7;
+  --color-page-bg: #ffffff;
   --color-card: #ffffff;
-  --color-surface-muted: #fff0ec;
-  --color-surface-elevated: #fff9f7;
-  --color-surface-checked: #fff0ec;
-  --color-sticky-header: #f6fdf8ee;
-  --color-row-pressed: #f0fdf4;
+  --color-surface-muted: #f0f0f0;
+  --color-surface-elevated: #ffffff;
+  --color-surface-checked: #e8f7f5;
+  --color-sticky-header: #ffffffee;
+  --color-row-pressed: #d9f2f0;
+  --color-chip-surface: #c6ece8;
+  --color-header-gradient: linear-gradient(180deg, #d9f2f0 0%, #ffffff 46%);
 
   /* Borders & dividers */
-  --color-border: #0000000a;
-  --color-border-strong: #00000009;
+  --color-border: #0000000d;
+  --color-border-strong: #dddddd;
 
   /* Text */
-  --color-text: #23100a;
-  --color-text-secondary: #b07060;
-  --color-text-muted: #e0c0b8;
+  --color-text: #333333c9;
+  --color-text-secondary: #888888;
+  --color-text-muted: #999999;
   --color-text-on-brand: #ffffff;
 
   /* Row / list (main) */
-  --color-row-title: #0f2318;
-  --color-row-meta: #b07060;
-  --color-row-chevron: #b0ccba;
+  --color-row-title: #333333;
+  --color-row-meta: #888888;
+  --color-row-chevron: #bbbbbb;
 
   /* Semantic */
-  --color-favorite: #ff6b6b;
-  --color-favorite-filter-bg: #ff6b6b22;
   --color-danger-soft: #ff5e5e22;
   --color-danger: #ff5e5e;
 
@@ -48,19 +48,31 @@
   --color-warning-text: #e07000;
 
   /* Shadows */
-  --shadow-card: 0 4px 32px #00000009;
+  --shadow-card: 0px -1px 10px 4px #00000009;
   --shadow-card-list: 0 2px 20px #00000008;
   --shadow-theme-toggle: 0 4px 24px #00000018;
 
   /* Misc */
   --color-white: #ffffff;
   --color-transparent: transparent;
+
+  /* Fonts */
+  --font-family: "Nunito", sans-serif;
+  --font-size-small: 12px;
+  --font-size-medium: 14px;
+  --font-size-large: 16px;
+  --font-size-x-large: 18px;
+  --font-size-xx-large: 20px;
+  --font-size-xxx-large: 22px;
+  --font-size-xxxx-large: 24px;
 }
 
 [data-theme="dark"] {
-  --color-brand-faint: #ff704320;
-  --color-brand-light: #ff704355;
-  --color-accent-faint: #e85d2f20;
+  --color-brand-faint: #ff7b4530;
+  --color-brand-light: #ff7b4555;
+  --color-brand-border-subtle: #ff7b4544;
+  --color-brand-border-medium: #ff7b4566;
+  --color-accent-faint: #e86a3530;
 
   --color-page-bg: #160f0c;
   --color-card: #1f1410;
@@ -69,8 +81,11 @@
   --color-surface-checked: #2a1a1488;
   --color-sticky-header: #0e1812ee;
   --color-row-pressed: #f0fdf422;
+  --color-chip-surface: #2a1a14;
+  --color-header-gradient: #160f0c;
 
   --color-border: #ffffff0a;
+  --color-border-strong: #ffffff14;
 
   --color-text: #f5ede8;
   --color-text-secondary: #8a6050;

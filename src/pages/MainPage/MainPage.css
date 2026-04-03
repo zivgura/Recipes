@@ -5,8 +5,8 @@
 }
 
 .main-page__header-wrap {
-  padding: 36px 20px 0;
-  background: var(--color-page-bg);
+  padding: 36px 16px 0;
+  background: var(--color-header-gradient);
 }
 
 .main-page__intro {
@@ -33,7 +33,11 @@
   font-size: 13px;
   color: var(--color-text-secondary);
   margin-top: 6px;
-  font-weight: 600;
+  font-weight: 400;
+}
+
+.main-page__subtitle-greeting {
+  font-weight: 500;
 }
 
 .main-page__sync {
@@ -65,22 +69,28 @@
   transform: translateY(-50%);
   display: flex;
   pointer-events: none;
-  color: var(--color-text-secondary);
+  color: var(--color-brand-light);
 }
 
 .main-page__search {
   width: 100%;
   background: var(--color-card);
-  border: 2px solid var(--color-border);
-  border-radius: 20px;
+  border: 1.5px solid var(--color-brand-border-medium);
+  border-radius: 50px;
   padding: 13px 44px 13px 16px;
   font-size: 15px;
   font-weight: 600;
   color: var(--color-text);
+  box-shadow: var(--shadow-card);
   outline: none;
   font-family: inherit;
   transition: border-color 0.2s;
   -webkit-appearance: none;
+}
+
+.main-page__search::placeholder {
+  color: var(--color-text-muted);
+  font-weight: 500;
 }
 
 .main-page__search:focus {
@@ -112,9 +122,9 @@
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  border: 2px solid transparent;
-  background: var(--color-card);
-  color: var(--color-text-secondary);
+  border: 1.5px solid var(--color-brand-light);
+  background: var(--color-chip-surface);
+  color: var(--color-text);
   font-family: inherit;
   transition: all 0.15s;
 }
@@ -136,16 +146,6 @@
   background: transparent;
   flex-shrink: 0;
   margin: 0 2px;
-}
-
-.main-page__filter--fav-on {
-  border-color: var(--color-favorite);
-  background: var(--color-favorite-filter-bg);
-  color: var(--color-favorite);
-}
-
-.main-page__list-pad {
-  padding-bottom: 100px;
 }
 
 .main-page__empty {
@@ -173,10 +173,11 @@
 
 .main-page__card-list {
   background: var(--color-card);
-  border-radius: 24px;
-  margin: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
   overflow: hidden;
-  box-shadow: var(--shadow-card-list);
 }
 
 .main-page__group {
@@ -184,10 +185,12 @@
 }
 
 .main-page__group-label {
+  display: flex;
+  justify-content: space-between;
   padding: 16px 20px 8px;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: var(--color-brand);
+  color: var(--color-text);
   text-transform: uppercase;
 }

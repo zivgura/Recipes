@@ -6,8 +6,6 @@ import "./MainPage.css";
 
 export function MainPage({
   onSelect,
-  favs,
-  toggleFav,
   recipes,
   allCats,
   allTags,
@@ -17,12 +15,10 @@ export function MainPage({
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState(null);
   const [activeCat, setActiveCat] = useState("הכל");
-  const [showFavs, setShowFavs] = useState(false);
 
   const filtered = recipes.filter((r) => {
     if (activeCat !== "הכל" && r.category !== activeCat) return false;
     if (activeTag && !r.tags.includes(activeTag)) return false;
-    if (showFavs && !favs.includes(r.id)) return false;
     const q = search.trim().toLowerCase();
     return !q || r.title.toLowerCase().includes(q) || r.ingredients.some((i) => i.name.toLowerCase().includes(q));
   });
@@ -33,20 +29,16 @@ export function MainPage({
     return acc;
   }, []);
 
-  const isFiltering = search || activeTag || showFavs || activeCat !== "הכל";
+  const isFiltering = search || activeTag || activeCat !== "הכל";
 
   return (
     <div className="main-page" dir="rtl">
       <div className="main-page__header-wrap">
         <div className="main-page__intro">
           <div className="main-page__kicker">Recipes · 🍴 ספר המתכונים</div>
-          <h1 className="main-page__title">
-            המתכונים
-            <br />
-            של זיו
-          </h1>
           <p className="main-page__subtitle">
-            {recipes.length} מתכונים · {favs.length} מועדפים
+            <h4 className="main-page__subtitle-greeting">היי שלום</h4>
+            מה נבשל היום?
             {onRefreshFromDrive && (
               <>
                 {" "}
@@ -66,7 +58,7 @@ export function MainPage({
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="חיפוש לפי שם או מצרך..."
+            placeholder="חיפוש לפי שם / מצרכים"
             className={`main-page__search${search ? " main-page__search--active" : ""}`}
           />
         </div>
@@ -93,13 +85,6 @@ export function MainPage({
               {tagLabel(tag, tagEmoji)}
             </button>
           ))}
-          <button
-            type="button"
-            onClick={() => setShowFavs((f) => !f)}
-            className={`main-page__filter${showFavs ? " main-page__filter--fav-on" : ""}`}
-          >
-            ❤️ מועדפים
-          </button>
         </div>
       </div>
 
@@ -118,8 +103,6 @@ export function MainPage({
                   key={r.id}
                   recipe={r}
                   onClick={() => onSelect(r)}
-                  isFav={favs.includes(r.id)}
-                  onFav={toggleFav}
                 />
               ))}
             </div>
@@ -127,15 +110,21 @@ export function MainPage({
         ) : (
           grouped.map(({ cat, items }) => (
             <div key={cat} className="main-page__group">
-              <div className="main-page__group-label">{cat}</div>
+              <div className="main-page__group-label">
+                <span>
+                {cat}
+                </span>
+                <span>
+                  {items.length}
+                  {" "}מתכונים
+                </span>
+              </div>
               <div className="main-page__card-list">
                 {items.map((r) => (
                   <RecipeRow
                     key={r.id}
                     recipe={r}
                     onClick={() => onSelect(r)}
-                    isFav={favs.includes(r.id)}
-                    onFav={toggleFav}
                   />
                 ))}
               </div>

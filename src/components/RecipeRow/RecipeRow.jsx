@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Heart, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import "./RecipeRow.css";
 
-export function RecipeRow({ recipe, onClick, isFav, onFav }) {
+export function RecipeRow({ recipe, onClick }) {
   const [pressed, setPressed] = useState(false);
   return (
     <div
@@ -24,24 +24,7 @@ export function RecipeRow({ recipe, onClick, isFav, onFav }) {
         </div>
       </div>
 
-      <div className="recipe-row__actions">
-        <button
-          type="button"
-          className="recipe-row__fav-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onFav(recipe.id);
-          }}
-        >
-          <Heart
-            className={`recipe-row__fav-icon${isFav ? " recipe-row__fav-icon--active" : ""}`}
-            size={19}
-            fill={isFav ? "currentColor" : "none"}
-            strokeWidth={2}
-          />
-        </button>
-        <ChevronLeft className="recipe-row__chevron" size={18} strokeWidth={2.5} />
-      </div>
+      <ChevronLeft className="recipe-row__chevron" size={18} strokeWidth={2.5} />
     </div>
   );
 }

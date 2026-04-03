@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { ArrowRight, Heart, RotateCcw } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import { fmtAmt } from "../../utils/recipeUtils.js";
 import { Section } from "../../components/Section/Section.jsx";
 import { Step } from "../../components/Step/Step.jsx";
 import { RecipeDone } from "../../components/RecipeDone/RecipeDone.jsx";
 import "./RecipePage.css";
 
-export function RecipePage({ recipe, onBack, favs, toggleFav }) {
+export function RecipePage({ recipe, onBack }) {
   const [scale, setScale] = useState(1);
   const [done, setDone] = useState({});
   const [checkedIngs, setCheckedIngs] = useState({});
@@ -21,53 +21,56 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
   const doneCount = Object.values(done).filter(Boolean).length;
   const progress = doneCount / totalSteps;
   const checkedIngCount = Object.values(checkedIngs).filter(Boolean).length;
-  const isFav = favs.includes(recipe.id);
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    const SCROLL_START = 10;
+    const SCROLL_RANGE = 200;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const t = Math.min(1, Math.max(0, (y - SCROLL_START) / SCROLL_RANGE));
+      hero.style.setProperty("--recipe-hero-shrink", t.toFixed(4));
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div className="recipe-page">
       <div className="recipe-page__toolbar">
-        <button type="button" onClick={onBack} className="recipe-page__back">
-          <ArrowRight size={17} strokeWidth={2.5} /> כל המתכונים
-        </button>
-
-        {doneCount > 0 && (
-          <div className="recipe-page__progress-wrap">
-            <div className="recipe-page__progress-track">
-              <div className="recipe-page__progress-fill" style={{ width: `${progress * 100}%` }} />
+        <div className="recipe-page__toolbar-start">
+          <button type="button" onClick={onBack} className="recipe-page__back">
+            <ArrowRight size={17} strokeWidth={2.5} /> כל המתכונים
+          </button>
+        </div>
+        <div className="recipe-page__toolbar-center">
+          {doneCount > 0 && (
+            <div className="recipe-page__progress-wrap">
+              <div className="recipe-page__progress-track">
+                <div className="recipe-page__progress-fill" style={{ width: `${progress * 100}%` }} />
+              </div>
+              <span className="recipe-page__progress-label">
+                {doneCount}/{totalSteps}
+              </span>
             </div>
-            <span className="recipe-page__progress-label">
-              {doneCount}/{totalSteps}
-            </span>
-          </div>
-        )}
-
-        <button type="button" onClick={() => toggleFav(recipe.id)} className="recipe-page__fav">
-          <Heart
-            size={18}
-            className={`recipe-page__fav-icon${isFav ? " recipe-page__fav-icon--on" : ""}`}
-            fill={isFav ? "currentColor" : "none"}
-            strokeWidth={2.5}
-          />
-        </button>
+          )}
+        </div>
+        <div className="recipe-page__toolbar-end" aria-hidden="true" />
       </div>
 
       <div className="recipe-page__content" dir="rtl">
-        <div className="recipe-page__card recipe-page__card--hero">
-          <div className="recipe-page__emoji">{recipe.emoji}</div>
-          <h1 className="recipe-page__title">{recipe.title}</h1>
-
-          <div className="recipe-page__tags">
-            <span className="recipe-page__tag recipe-page__tag--primary">{recipe.category}</span>
-            <span className="recipe-page__tag recipe-page__tag--muted">⏱ {recipe.cookTime}</span>
-            {recipe.tags.map((t) => (
-              <span key={t} className="recipe-page__tag recipe-page__tag--muted">
-                {t}
-              </span>
-            ))}
-          </div>
-
-          <div className="recipe-page__scale">
-            <span className="recipe-page__scale-label">כמות המתכון:</span>
+        <div ref={heroRef} className="recipe-page__card recipe-page__card--hero">
+          {/* <div className="recipe-page__emoji">{recipe.emoji}</div> */}
+          <div className="recipe-page__title-wrap">
+            <h1 className="recipe-page__title">{recipe.title}</h1>
+            <div className="recipe-page__scale">
+            {/* <span className="recipe-page__scale-label">כמות המתכון:</span> */}
             <button
               type="button"
               className="recipe-page__scale-btn"
@@ -85,9 +88,19 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
               +
             </button>
           </div>
-        </div>
+          </div>
 
-        <div className="recipe-page__layout-wrap">
+          <div className="recipe-page__tags">
+            <span className="recipe-page__tag recipe-page__tag--primary">{recipe.category}</span>
+            {/* <span className="recipe-page__tag recipe-page__tag--muted">⏱ {recipe.cookTime}</span> */}
+            {recipe.tags.map((t) => (
+              <span key={t} className="recipe-page__tag recipe-page__tag--muted">
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <div className="recipe-page__layout-wrap">
           <span className="recipe-page__layout-label" id="recipe-layout-label">
             תצוגה:
           </span>
@@ -119,6 +132,7 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
               טאבים
             </button>
           </div>
+        </div>
         </div>
 
         {isSplit && (
@@ -157,15 +171,14 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
             hidden={isSplit ? !showIngredients : undefined}
           >
             <div className="recipe-page__block-header">
-              <h2 className="recipe-page__h2" id="recipe-heading-ingredients">
-                <span className="recipe-page__h2-icon">🛒</span>
+              <h4 className="recipe-page__h2" id="recipe-heading-ingredients">
                 מצרכים
               {checkedIngCount > 0 && (
                 <span className="recipe-page__count">
                   {checkedIngCount}/{recipe.ingredients.length}
                 </span>
               )}
-            </h2>
+            </h4>
             {checkedIngCount > 0 && (
               <button type="button" className="recipe-page__reset" onClick={() => setCheckedIngs({})}>
                 <RotateCcw size={12} /> איפוס
@@ -216,10 +229,9 @@ export function RecipePage({ recipe, onBack, favs, toggleFav }) {
             hidden={isSplit ? !showDirections : undefined}
           >
             <div className="recipe-page__block-header">
-              <h2 className="recipe-page__h2" id="recipe-heading-directions">
-                <span className="recipe-page__h2-icon">👨‍🍳</span>
+              <h4 className="recipe-page__h2" id="recipe-heading-directions">
                 הוראות
-              </h2>
+              </h4>
               {doneCount > 0 && (
                 <button type="button" className="recipe-page__reset" onClick={() => setDone({})}>
                   <RotateCcw size={12} /> איפוס
