@@ -1,6 +1,10 @@
 import { createContext, useMemo, useState, useCallback } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
-import { clearStoredAccessToken, getStoredAccessToken, storeAccessToken } from "../lib/driveAuthStorage.js";
+import {
+  clearStoredAccessToken,
+  getStoredAccessToken,
+  storeAccessToken,
+} from "../lib/driveAuthStorage.js";
 import { clearCachedRecipes } from "../lib/recipeCache.js";
 
 export const DriveAuthContext = createContext({
@@ -37,8 +41,12 @@ export function DriveAuthProvider({ children }) {
       requestLogin,
       logout,
     }),
-    [accessToken, requestLogin, logout]
+    [accessToken, requestLogin, logout],
   );
 
-  return <DriveAuthContext.Provider value={value}>{children}</DriveAuthContext.Provider>;
+  return (
+    <DriveAuthContext.Provider value={value}>
+      {children}
+    </DriveAuthContext.Provider>
+  );
 }

@@ -2,9 +2,9 @@
   text-align: center;
   padding: 28px 20px;
   margin-top: 16px;
-  background: var(--color-brand-faint);
+  background: var(--primary-light);
   border-radius: 22px;
-  border: 1.5px solid var(--color-brand-border-medium);
+  border: 1.5px solid var(--primary-mid);
 }
 
 .recipe-done__emoji {
@@ -15,5 +15,5 @@
 .recipe-done__title {
   font-size: 17px;
   font-weight: 900;
-  color: var(--color-brand);
+  color: var(--primary-dark);
 }

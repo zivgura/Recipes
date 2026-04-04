@@ -9,7 +9,10 @@ import { getDriveMode } from "./lib/driveConfig.js";
 
 try {
   const d = localStorage.getItem("rcp_dark");
-  document.documentElement.setAttribute("data-theme", d !== "false" ? "dark" : "light");
+  document.documentElement.setAttribute(
+    "data-theme",
+    d !== "false" ? "dark" : "light",
+  );
 } catch {
   document.documentElement.setAttribute("data-theme", "light");
 }
@@ -33,5 +36,5 @@ function Root() {
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Root />
-  </StrictMode>
+  </StrictMode>,
 );

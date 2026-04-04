@@ -29,7 +29,10 @@ export default function App() {
   } = useRecipes();
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute(
+      "data-theme",
+      dark ? "dark" : "light",
+    );
   }, [dark]);
 
   useEffect(() => {
@@ -65,9 +68,14 @@ export default function App() {
 
   return (
     <>
-      <button type="button" onClick={() => setDark((d) => !d)} className="app-theme-toggle" aria-label="החלפת ערכת נושא">
+      {/* <button
+        type="button"
+        onClick={() => setDark((d) => !d)}
+        className="app-theme-toggle"
+        aria-label="החלפת ערכת נושא"
+      >
         {dark ? "☀️" : "🌙"}
-      </button>
+      </button> */}
 
       {status === "loading" && (
         <div className="app-loading" dir="rtl">
@@ -80,9 +88,14 @@ export default function App() {
           <p className="app-auth-label">Recipes</p>
           <p className="app-auth-title">התחברות</p>
           <p className="app-auth-body">
-            המתכונים נשמרים ב-Google Drive. רק מוזמנים שקיבלו שיתוף (Viewer ומעלה) יכולים לצפות — יש להתחבר עם אותו חשבון Google.
+            המתכונים נשמרים ב-Google Drive. רק מוזמנים שקיבלו שיתוף (Viewer
+            ומעלה) יכולים לצפות — יש להתחבר עם אותו חשבון Google.
           </p>
-          <button type="button" onClick={() => requestLogin()} className="app-btn-primary">
+          <button
+            type="button"
+            onClick={() => requestLogin()}
+            className="app-btn-primary"
+          >
             התחבר עם Google
           </button>
           <a
@@ -100,7 +113,9 @@ export default function App() {
         <div className="app-fullscreen app-fullscreen--gap-md" dir="rtl">
           <p className="app-no-access-title">אין גישה למתכונים</p>
           <p className="app-auth-body app-auth-body--wide">
-            החשבון הזה לא ברשימת המוזמנים ב-Drive: אין הרשאת צפייה בקובץ או בתיקיית המתכונים. בעל הקבצים צריך לשתף איתך ב-Google Drive (Viewer) את אותו כתובת Gmail שאיתה התחברת — או להחליף חשבון למוזמן אחר.
+            החשבון הזה לא ברשימת המוזמנים ב-Drive: אין הרשאת צפייה בקובץ או
+            בתיקיית המתכונים. בעל הקבצים צריך לשתף איתך ב-Google Drive (Viewer)
+            את אותו כתובת Gmail שאיתה התחברת — או להחליף חשבון למוזמן אחר.
           </p>
           {error && <p className="app-error-detail">{error}</p>}
           <div className="app-actions-row">
@@ -114,7 +129,11 @@ export default function App() {
             >
               החלף חשבון Google
             </button>
-            <button type="button" onClick={() => retry()} className="app-btn-secondary">
+            <button
+              type="button"
+              onClick={() => retry()}
+              className="app-btn-secondary"
+            >
               נסה שוב אחרי שקיבלתי גישה
             </button>
           </div>
@@ -125,7 +144,11 @@ export default function App() {
         <div className="app-fullscreen app-fullscreen--gap-md" dir="rtl">
           <p className="app-error-title">שגיאה בטעינת מתכונים</p>
           <p className="app-error-msg">{error}</p>
-          <button type="button" onClick={() => retry()} className="app-btn-primary app-btn-primary--sm">
+          <button
+            type="button"
+            onClick={() => retry()}
+            className="app-btn-primary app-btn-primary--sm"
+          >
             נסה שוב
           </button>
         </div>

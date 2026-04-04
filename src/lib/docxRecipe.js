@@ -6,6 +6,8 @@ import { RecipeSchema } from "../schemas/recipeSchema.js";
  *
  * Expected layout (see `src/data/recipeTemplate.txt`):
  * - First line: recipe title (also used as title; filename is fallback).
+ * - Optional rows between title and **המרכיבים** (each line starts with a known prefix):
+ *   **הערה:**, **קטגוריה:** (comma-separated list), **דרגת קושי:**, **מנות:** (see `parseRecipeMetadataLines`).
  * - Block under **המרכיבים / מרכיבים** (header line): ingredient lines until **אופן ההכנה**.
  * - Block under **אופן ההכנה**: **blank lines** separate sections. Each non-empty block (one or
  *   more consecutive lines) becomes one section with a single step; optional leading `1.` / `2.`
@@ -19,11 +21,14 @@ export async function recipeFromDocxArrayBuffer(fileId, fileName, arrayBuffer) {
   const recipe = {
     id: fileId,
     title: parsed.title,
-    category: "כללי",
+    note: parsed.note,
+    category: parsed.categories[0] ?? "כללי",
+    categories: parsed.categories,
+    difficulty: parsed.difficulty,
     tags: [],
     emoji: "📄",
     cookTime: "—",
-    servings: 1,
+    servings: parsed.servings,
     ingredients: parsed.ingredients,
     sections: parsed.sections,
   };
@@ -37,11 +42,7 @@ function displayTitleFromFileName(fileName) {
 
 /** @param {string} line */
 function normalizeHeaderKey(line) {
-  return line
-    .trim()
-    .replace(/\s+/g, " ")
-    .replace(/:+$/, "")
-    .replace(/^:+/, "");
+  return line.trim().replace(/\s+/g, " ").replace(/:+$/, "").replace(/^:+/, "");
 }
 
 /** @param {string} line */
@@ -61,6 +62,64 @@ function normTitle(s) {
   return s.trim().replace(/\s+/g, " ");
 }
 
+const META_PREFIX = {
+  note: "הערה:",
+  category: "קטגוריה:",
+  difficulty: "דרגת קושי:",
+  servings: "מנות:",
+};
+
+/**
+ * Lines between the recipe title and **המרכיבים** (or **אופן ההכנה** when there is no ingredients block).
+ * Only lines starting with a known prefix are consumed; other lines are ignored.
+ * @param {string[]} linesAfterTitle
+ * @returns {{ note: string, categories: string[], difficulty: string, servings: number | null }}
+ */
+function splitCategoriesFromComma(value) {
+  const parts = value
+    .split(",")
+    .map((s) => normTitle(s))
+    .filter(Boolean);
+  const seen = new Set();
+  return (parts.length ? parts : ["כללי"]).filter((c) =>
+    seen.has(c) ? false : (seen.add(c), true),
+  );
+}
+
+function parseRecipeMetadataLines(linesAfterTitle) {
+  /** @type {string[]} */
+  const noteParts = [];
+  /** @type {string[]} */
+  let categories = ["כללי"];
+  let difficulty = "";
+  /** @type {number | null} */
+  let servings = null;
+
+  for (const raw of linesAfterTitle) {
+    if (!raw || !String(raw).trim()) continue;
+    const line = String(raw).trim();
+    if (line.startsWith(META_PREFIX.note)) {
+      noteParts.push(line.slice(META_PREFIX.note.length).trim());
+    } else if (line.startsWith(META_PREFIX.category)) {
+      const v = line.slice(META_PREFIX.category.length).trim();
+      if (v) categories = splitCategoriesFromComma(v);
+    } else if (line.startsWith(META_PREFIX.difficulty)) {
+      difficulty = normTitle(line.slice(META_PREFIX.difficulty.length).trim());
+    } else if (line.startsWith(META_PREFIX.servings)) {
+      const v = line.slice(META_PREFIX.servings.length).trim();
+      const n = parseInt(v, 10);
+      if (!Number.isNaN(n) && n >= 1) servings = n;
+    }
+  }
+
+  const note = noteParts.filter(Boolean).join(" ").trim();
+  return { note, categories, difficulty, servings };
+}
+
+function defaultMetadata() {
+  return { note: "", categories: ["כללי"], difficulty: "", servings: null };
+}
+
 /**
  * @param {string} text
  * @param {string} fallbackTitle
@@ -74,26 +133,29 @@ function parseRecipeBody(text, fallbackTitle) {
   if (ingIdx >= 0 && prepIdx > ingIdx) {
     const titleLines = lines.slice(0, ingIdx).filter(Boolean);
     const title = titleLines[0] ? normTitle(titleLines[0]) : fallbackTitle;
+    const meta = parseRecipeMetadataLines(titleLines.slice(1));
     const ingLines = lines.slice(ingIdx + 1, prepIdx).filter(Boolean);
     const stepLines = lines.slice(prepIdx + 1);
     const ingredients = parseIngredientLines(ingLines);
     let sections = parseInstructionSections(stepLines);
     sections = dropDuplicateTitleInFirstSection(sections, title);
-    return { title, ingredients, sections };
+    return { title, ingredients, sections, ...meta };
   }
 
   if (ingIdx < 0 && prepIdx >= 0) {
     const titleLines = lines.slice(0, prepIdx).filter(Boolean);
     const title = titleLines[0] ? normTitle(titleLines[0]) : fallbackTitle;
+    const meta = parseRecipeMetadataLines(titleLines.slice(1));
     const stepLines = lines.slice(prepIdx + 1);
     let sections = parseInstructionSections(stepLines);
     sections = dropDuplicateTitleInFirstSection(sections, title);
-    return { title, ingredients: [], sections };
+    return { title, ingredients: [], sections, ...meta };
   }
 
   if (ingIdx >= 0 && prepIdx === -1) {
     const titleLines = lines.slice(0, ingIdx).filter(Boolean);
     const title = titleLines[0] ? normTitle(titleLines[0]) : fallbackTitle;
+    const meta = parseRecipeMetadataLines(titleLines.slice(1));
     const ingLines = lines.slice(ingIdx + 1).filter(Boolean);
     const ingredients = parseIngredientLines(ingLines);
     return {
@@ -102,9 +164,17 @@ function parseRecipeBody(text, fallbackTitle) {
       sections: [
         {
           title: "הכנה",
-          steps: [{ id: "s0-0", text: "(אין שלבי הכנה — הוסיפו מקטע «אופן ההכנה» במסמך)", timer: null, warning: null }],
+          steps: [
+            {
+              id: "s0-0",
+              text: "(אין שלבי הכנה — הוסיפו מקטע «אופן ההכנה» במסמך)",
+              timer: null,
+              warning: null,
+            },
+          ],
         },
       ],
+      ...meta,
     };
   }
 
@@ -121,8 +191,11 @@ function parseFallbackBody(lines, fallbackTitle) {
   const title = nonEmpty[0] ? normTitle(nonEmpty[0]) : fallbackTitle;
   const rest = nonEmpty.slice(1);
   let steps = paragraphChunksToSteps(rest.join("\n"), 0);
-  const sections = dropDuplicateTitleInFirstSection([{ title: "הכנה", steps }], title);
-  return { title, ingredients: [], sections };
+  const sections = dropDuplicateTitleInFirstSection(
+    [{ title: "הכנה", steps }],
+    title,
+  );
+  return { title, ingredients: [], sections, ...defaultMetadata() };
 }
 
 /**
@@ -145,7 +218,14 @@ function dropDuplicateTitleInFirstSection(sections, title) {
 /** @param {string} block @param {number} sectionIdx */
 function paragraphChunksToSteps(block, sectionIdx) {
   if (!block.trim()) {
-    return [{ id: `s${sectionIdx}-0`, text: "(המסמך ריק)", timer: null, warning: null }];
+    return [
+      {
+        id: `s${sectionIdx}-0`,
+        text: "(המסמך ריק)",
+        timer: null,
+        warning: null,
+      },
+    ];
   }
   let chunks = block
     .split(/\n\s*\n/)
@@ -209,7 +289,9 @@ function parseInstructionSections(lines) {
     return [
       {
         title: "הכנה",
-        steps: [{ id: "s0-0", text: "(אין שלבי הכנה)", timer: null, warning: null }],
+        steps: [
+          { id: "s0-0", text: "(אין שלבי הכנה)", timer: null, warning: null },
+        ],
       },
     ];
   }
@@ -217,7 +299,7 @@ function parseInstructionSections(lines) {
   return blocks.map((blockLines, i) => {
     const raw = blockLines.join(" ").replace(/\s+/g, " ").trim();
     const text = stripLeadingStepNumber(raw);
-    const sectionTitle = blocks.length === 1 ? "הכנה" : '';
+    const sectionTitle = blocks.length === 1 ? "הכנה" : "";
     return {
       title: sectionTitle,
       steps: [

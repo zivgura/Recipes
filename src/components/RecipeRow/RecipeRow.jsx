@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
+import { recipeCategoryList } from "../../lib/recipeCatalog.js";
 import "./RecipeRow.css";
 
 export function RecipeRow({ recipe, onClick }) {
@@ -17,14 +18,20 @@ export function RecipeRow({ recipe, onClick }) {
       <div className="recipe-row__main">
         <div className="recipe-row__title">{recipe.title}</div>
         <div className="recipe-row__meta-row">
-          <span className="recipe-row__cat">{recipe.category}</span>
+          <span className="recipe-row__cat">
+            {recipeCategoryList(recipe).join(" · ")}
+          </span>
           <span className="recipe-row__meta">
             {recipe.cookTime} · {recipe.ingredients.length} מצרכים
           </span>
         </div>
       </div>
 
-      <ChevronLeft className="recipe-row__chevron" size={18} strokeWidth={2.5} />
+      <ChevronLeft
+        className="recipe-row__chevron"
+        size={18}
+        strokeWidth={2.5}
+      />
     </div>
   );
 }

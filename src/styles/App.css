@@ -1,7 +1,7 @@
 .app-fullscreen {
   min-height: 100vh;
   background: var(--color-page-bg);
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,7 +18,7 @@
   gap: 16px;
 }
 
-.app-theme-toggle {
+/* .app-theme-toggle {
   position: fixed;
   bottom: 24px;
   left: 20px;
@@ -34,12 +34,12 @@
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-theme-toggle);
-}
+} */
 
 .app-screen {
   min-height: 100vh;
   background: var(--color-page-bg);
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 .app-screen--center {
@@ -58,7 +58,7 @@
 .app-loading {
   min-height: 100vh;
   background: var(--color-page-bg);
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,15 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import "./StepTimer.css";
 
-export function StepTimer({ stepId, seconds }) {
+export function StepTimer({ seconds }) {
   const [timeLeft, setTimeLeft] = useState(seconds);
   const [running, setRunning] = useState(false);
   const ref = useRef(null);
-  useEffect(() => {
-    setTimeLeft(seconds);
-    setRunning(false);
-    clearInterval(ref.current);
-  }, [stepId]);
   useEffect(() => {
     if (running && timeLeft > 0) {
       ref.current = setInterval(
@@ -22,10 +17,11 @@ export function StepTimer({ stepId, seconds }) {
             }
             return t - 1;
           }),
-        1000
+        1000,
       );
     }
     return () => clearInterval(ref.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- interval tied to `running`, not each tick
   }, [running]);
   const mins = Math.floor(timeLeft / 60),
     secs = timeLeft % 60;

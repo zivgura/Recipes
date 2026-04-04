@@ -10,14 +10,31 @@ export const fmtAmt = (amount, scale) => {
     [0.67, "⅔"],
     [0.75, "¾"],
   ];
-  for (const [f, s] of fracs) if (Math.abs(frac - f) < 0.05) return (Math.floor(v) || "") + s;
+  for (const [f, s] of fracs)
+    if (Math.abs(frac - f) < 0.05) return (Math.floor(v) || "") + s;
   return v.toFixed(1);
 };
 
 /** @typedef {{ text: string, ingredient?: object, formattedAmount?: string }} StepTextSegment */
 
 export function annotateStep(text, ingredients, scale) {
-  const noise = new Set(["את", "של", "עם", "על", "עד", "או", "לפי", "ללא", "כ", "הם", "הן", "זה", "זו", "יש", "לא"]);
+  const noise = new Set([
+    "את",
+    "של",
+    "עם",
+    "על",
+    "עד",
+    "או",
+    "לפי",
+    "ללא",
+    "כ",
+    "הם",
+    "הן",
+    "זה",
+    "זו",
+    "יש",
+    "לא",
+  ]);
   const entries = [];
   for (const ingredient of ingredients) {
     if (ingredient.amount === 0 && !ingredient.unit) continue;
@@ -61,7 +78,8 @@ export function annotateStep(text, ingredients, scale) {
   const segments = [];
   let cursor = 0;
   for (const match of matches) {
-    if (match.start > cursor) segments.push({ text: text.slice(cursor, match.start) });
+    if (match.start > cursor)
+      segments.push({ text: text.slice(cursor, match.start) });
     segments.push({
       text: text.slice(match.start, match.end),
       ingredient: match.ingredient,

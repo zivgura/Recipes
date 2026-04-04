@@ -4,11 +4,32 @@ const CAT_ORDER = ["מנות עיקריות", "מרקים", "תוספות"];
 const TAG_ORDER = ["צהריים", "מתוקים", "צמחוני", "אירוח"];
 
 /**
- * @param {Array<{ category: string }>} recipes
+ * All category labels for a recipe (comma-separated `category` is split; prefers `categories` when present).
+ * @param {{ category?: string, categories?: string[] }} recipe
+ * @returns {string[]}
+ */
+export function recipeCategoryList(recipe) {
+  if (Array.isArray(recipe.categories) && recipe.categories.length > 0) {
+    return recipe.categories;
+  }
+  if (typeof recipe.category === "string" && recipe.category.trim()) {
+    return recipe.category
+      .split(",")
+      .map((s) => s.trim().replace(/\s+/g, " "))
+      .filter(Boolean);
+  }
+  return ["כללי"];
+}
+
+/**
+ * @param {Array<{ category?: string, categories?: string[] }>} recipes
  * @returns {string[]}
  */
 export function deriveCategories(recipes) {
-  const present = new Set(recipes.map((r) => r.category));
+  const present = new Set();
+  for (const r of recipes) {
+    for (const c of recipeCategoryList(r)) present.add(c);
+  }
   const ordered = CAT_ORDER.filter((c) => present.has(c));
   const rest = [...present].filter((c) => !CAT_ORDER.includes(c)).sort();
   return ["הכל", ...ordered, ...rest];

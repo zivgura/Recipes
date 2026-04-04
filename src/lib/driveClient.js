@@ -11,13 +11,13 @@ function throwDriveHttpError(res, text, context) {
   if (res.status === 403) {
     throw new DriveAccessError(
       `${context}: אין הרשאת צפייה ב-Google Drive (403).`,
-      { status: 403, code: "INSUFFICIENT_PERMISSION" }
+      { status: 403, code: "INSUFFICIENT_PERMISSION" },
     );
   }
   if (res.status === 404) {
     throw new DriveAccessError(
       `${context}: הקובץ או התיקייה לא נמצאו או אינם זמינים לחשבון (404).`,
-      { status: 404, code: "NOT_FOUND" }
+      { status: 404, code: "NOT_FOUND" },
     );
   }
   throw new Error(`${context} (${res.status}): ${text.slice(0, 200)}`);
@@ -80,7 +80,8 @@ async function fetchDriveFileBytesOAuth(fileId, accessToken) {
 }
 
 const FOLDER_MIME = "application/vnd.google-apps.folder";
-const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+const DOCX_MIME =
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 /**
  * Direct children of the folder whose names end in `.docx` (case-insensitive). Folders excluded.
@@ -152,20 +153,27 @@ export async function loadRecipesFromDriveOAuthFile(fileId, accessToken) {
  * Folder of .docx files (OAuth) → merge into one list (filename → title each).
  */
 export async function loadRecipesFromDriveOAuthFolder(folderId, accessToken) {
-  const {files, folders} = await listDocxFilesInFolder(folderId, accessToken);
+  const { files, folders } = await listDocxFilesInFolder(folderId, accessToken);
   if (files.length === 0) {
-    driveLog("folder: no .docx files (check folder id, Shared Drive, and names)");
+    driveLog(
+      "folder: no .docx files (check folder id, Shared Drive, and names)",
+    );
     return { recipes: [], tagEmoji: undefined };
   }
-  
-  const recipes = await Promise.all(files.map(async (f) => {
-    const buf = await fetchDriveFileBytesOAuth(f.id, accessToken);
-    return recipeFromDocxArrayBuffer(f.id, f.name || "recipe.docx", buf);
-  }));
+
+  const recipes = await Promise.all(
+    files.map(async (f) => {
+      const buf = await fetchDriveFileBytesOAuth(f.id, accessToken);
+      return recipeFromDocxArrayBuffer(f.id, f.name || "recipe.docx", buf);
+    }),
+  );
 
   // Recurse into one layer of subfolders.
   for (const folder of folders) {
-    const {recipes: subRecipes, } = await loadRecipesFromDriveOAuthFolder(folder.id, accessToken);
+    const { recipes: subRecipes } = await loadRecipesFromDriveOAuthFolder(
+      folder.id,
+      accessToken,
+    );
     recipes.push(...subRecipes);
   }
 

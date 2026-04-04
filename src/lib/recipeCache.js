@@ -1,4 +1,8 @@
-import { getDriveMode, getRecipesFileId, getRecipesFolderId } from "./driveConfig.js";
+import {
+  getDriveMode,
+  getRecipesFileId,
+  getRecipesFolderId,
+} from "./driveConfig.js";
 
 const CACHE_VERSION = 1;
 const PREFIX = "rcp_recipes_cache";
@@ -32,7 +36,7 @@ export function writeCachedRecipes(recipes, tagEmoji) {
   try {
     localStorage.setItem(
       getRecipeCacheStorageKey(),
-      JSON.stringify({ recipes, tagEmoji: tagEmoji ?? undefined })
+      JSON.stringify({ recipes, tagEmoji: tagEmoji ?? undefined }),
     );
   } catch {}
 }

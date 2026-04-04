@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import { fmtAmt } from "../../utils/recipeUtils.js";
+import { recipeCategoryList } from "../../lib/recipeCatalog.js";
 import { Section } from "../../components/Section/Section.jsx";
 import { Step } from "../../components/Step/Step.jsx";
 import { RecipeDone } from "../../components/RecipeDone/RecipeDone.jsx";
@@ -16,7 +17,8 @@ export function RecipePage({ recipe, onBack }) {
   const showIngredients = !isSplit || recipeTab === "ingredients";
   const showDirections = !isSplit || recipeTab === "directions";
   const toggleStepDone = (id) => setDone((d) => ({ ...d, [id]: !d[id] }));
-  const toggleIngredientChecked = (id) => setCheckedIngs((d) => ({ ...d, [id]: !d[id] }));
+  const toggleIngredientChecked = (id) =>
+    setCheckedIngs((d) => ({ ...d, [id]: !d[id] }));
   const totalSteps = recipe.sections.reduce((a, s) => a + s.steps.length, 0);
   const doneCount = Object.values(done).filter(Boolean).length;
   const progress = doneCount / totalSteps;
@@ -53,7 +55,10 @@ export function RecipePage({ recipe, onBack }) {
           {doneCount > 0 && (
             <div className="recipe-page__progress-wrap">
               <div className="recipe-page__progress-track">
-                <div className="recipe-page__progress-fill" style={{ width: `${progress * 100}%` }} />
+                <div
+                  className="recipe-page__progress-fill"
+                  style={{ width: `${progress * 100}%` }}
+                />
               </div>
               <span className="recipe-page__progress-label">
                 {doneCount}/{totalSteps}
@@ -65,78 +70,106 @@ export function RecipePage({ recipe, onBack }) {
       </div>
 
       <div className="recipe-page__content" dir="rtl">
-        <div ref={heroRef} className="recipe-page__card recipe-page__card--hero">
+        <div
+          ref={heroRef}
+          className="recipe-page__card recipe-page__card--hero"
+        >
           {/* <div className="recipe-page__emoji">{recipe.emoji}</div> */}
           <div className="recipe-page__title-wrap">
             <h1 className="recipe-page__title">{recipe.title}</h1>
             <div className="recipe-page__scale">
-            {/* <span className="recipe-page__scale-label">כמות המתכון:</span> */}
-            <button
-              type="button"
-              className="recipe-page__scale-btn"
-              onClick={() => setScale((s) => Math.max(0.5, s - 0.5))}
-            >
-              −
-            </button>
-            <span className="recipe-page__scale-value">
-              <span>×</span>
-              <span className="recipe-page__scale-value-amount">
-              {fmtAmt(1, scale)}
+              {/* <span className="recipe-page__scale-label">כמות המתכון:</span> */}
+              <button
+                type="button"
+                className="recipe-page__scale-btn"
+                onClick={() => setScale((s) => Math.max(0.5, s - 0.5))}
+              >
+                −
+              </button>
+              <span className="recipe-page__scale-value">
+                <span>×</span>
+                <span className="recipe-page__scale-value-amount">
+                  {fmtAmt(1, scale)}
+                </span>
               </span>
-            </span>
-            <button type="button" className="recipe-page__scale-btn" onClick={() => setScale((s) => s + 0.5)}>
-              +
-            </button>
-          </div>
+              <button
+                type="button"
+                className="recipe-page__scale-btn"
+                onClick={() => setScale((s) => s + 0.5)}
+              >
+                +
+              </button>
+            </div>
           </div>
 
+          {(recipe.note ?? "").trim() ? (
+            <p className="recipe-page__note">{recipe.note}</p>
+          ) : null}
+
           <div className="recipe-page__tags">
-            <span className="recipe-page__tag recipe-page__tag--primary">{recipe.category}</span>
+            {recipeCategoryList(recipe).map((c, i) => (
+              <span
+                key={`${c}-${i}`}
+                className={`recipe-page__tag${i === 0 ? " recipe-page__tag--primary" : " recipe-page__tag--muted"}`}
+              >
+                {c}
+              </span>
+            ))}
             {/* <span className="recipe-page__tag recipe-page__tag--muted">⏱ {recipe.cookTime}</span> */}
             {recipe.tags.map((t) => (
-              <span key={t} className="recipe-page__tag recipe-page__tag--muted">
+              <span
+                key={t}
+                className="recipe-page__tag recipe-page__tag--muted"
+              >
                 {t}
               </span>
             ))}
           </div>
 
           <div className="recipe-page__layout-wrap">
-          <span className="recipe-page__layout-label" id="recipe-layout-label">
-            תצוגה:
-          </span>
-          <div
-            className="recipe-page__tab-bar recipe-page__tab-bar--layout"
-            role="tablist"
-            aria-labelledby="recipe-layout-label"
-          >
-            <button
-              type="button"
-              role="tab"
-              id="recipe-layout-combined"
-              aria-selected={recipeLayout === "combined"}
-              aria-controls="recipe-panels"
-              className={`recipe-page__tab${recipeLayout === "combined" ? " recipe-page__tab--active" : ""}`}
-              onClick={() => setRecipeLayout("combined")}
+            <span
+              className="recipe-page__layout-label"
+              id="recipe-layout-label"
             >
-              ביחד
-            </button>
-            <button
-              type="button"
-              role="tab"
-              id="recipe-layout-split"
-              aria-selected={recipeLayout === "split"}
-              aria-controls="recipe-panels"
-              className={`recipe-page__tab${recipeLayout === "split" ? " recipe-page__tab--active" : ""}`}
-              onClick={() => setRecipeLayout("split")}
+              תצוגה:
+            </span>
+            <div
+              className="recipe-page__tab-bar recipe-page__tab-bar--layout"
+              role="tablist"
+              aria-labelledby="recipe-layout-label"
             >
-              טאבים
-            </button>
+              <button
+                type="button"
+                role="tab"
+                id="recipe-layout-combined"
+                aria-selected={recipeLayout === "combined"}
+                aria-controls="recipe-panels"
+                className={`recipe-page__tab${recipeLayout === "combined" ? " recipe-page__tab--active" : ""}`}
+                onClick={() => setRecipeLayout("combined")}
+              >
+                ביחד
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="recipe-layout-split"
+                aria-selected={recipeLayout === "split"}
+                aria-controls="recipe-panels"
+                className={`recipe-page__tab${recipeLayout === "split" ? " recipe-page__tab--active" : ""}`}
+                onClick={() => setRecipeLayout("split")}
+              >
+                טאבים
+              </button>
+            </div>
           </div>
-        </div>
         </div>
 
         {isSplit && (
-          <div className="recipe-page__tab-bar recipe-page__tab-bar--content" role="tablist" aria-label="מצרכים והוראות">
+          <div
+            className="recipe-page__tab-bar recipe-page__tab-bar--content"
+            role="tablist"
+            aria-label="מצרכים והוראות"
+          >
             <button
               type="button"
               role="tab"
@@ -167,65 +200,76 @@ export function RecipePage({ recipe, onBack }) {
             className="recipe-page__card recipe-page__card--block"
             id="recipe-panel-ingredients"
             role={isSplit ? "tabpanel" : "region"}
-            aria-labelledby={isSplit ? "recipe-tab-ingredients" : "recipe-heading-ingredients"}
+            aria-labelledby={
+              isSplit ? "recipe-tab-ingredients" : "recipe-heading-ingredients"
+            }
             hidden={isSplit ? !showIngredients : undefined}
           >
             <div className="recipe-page__block-header">
               <h4 className="recipe-page__h2" id="recipe-heading-ingredients">
                 מצרכים
+                {checkedIngCount > 0 && (
+                  <span className="recipe-page__count">
+                    {checkedIngCount}/{recipe.ingredients.length}
+                  </span>
+                )}
+              </h4>
               {checkedIngCount > 0 && (
-                <span className="recipe-page__count">
-                  {checkedIngCount}/{recipe.ingredients.length}
-                </span>
-              )}
-            </h4>
-            {checkedIngCount > 0 && (
-              <button type="button" className="recipe-page__reset" onClick={() => setCheckedIngs({})}>
-                <RotateCcw size={12} /> איפוס
-              </button>
-            )}
-          </div>
-          <div className="recipe-page__ing-list">
-            {recipe.ingredients.map((ing) => {
-              const isChecked = checkedIngs[ing.id];
-              return (
-                <div
-                  key={ing.id}
-                  onClick={() => toggleIngredientChecked(ing.id)}
-                  className={`recipe-page__ing${isChecked ? " recipe-page__ing--checked" : ""}`}
+                <button
+                  type="button"
+                  className="recipe-page__reset"
+                  onClick={() => setCheckedIngs({})}
                 >
-                  <div className="recipe-page__ing-left">
-                    <div
-                      className={`recipe-page__ing-check${isChecked ? " recipe-page__ing-check--on" : ""}`}
-                    >
-                      {isChecked && <span className="recipe-page__ing-check-mark">✓</span>}
+                  <RotateCcw size={12} /> איפוס
+                </button>
+              )}
+            </div>
+            <div className="recipe-page__ing-list">
+              {recipe.ingredients.map((ing) => {
+                const isChecked = checkedIngs[ing.id];
+                return (
+                  <div
+                    key={ing.id}
+                    onClick={() => toggleIngredientChecked(ing.id)}
+                    className={`recipe-page__ing${isChecked ? " recipe-page__ing--checked" : ""}`}
+                  >
+                    <div className="recipe-page__ing-left">
+                      <div
+                        className={`recipe-page__ing-check${isChecked ? " recipe-page__ing-check--on" : ""}`}
+                      >
+                        {isChecked && (
+                          <span className="recipe-page__ing-check-mark">✓</span>
+                        )}
+                      </div>
+                      <span
+                        className={`recipe-page__ing-name${isChecked ? " recipe-page__ing-name--checked" : ""}`}
+                      >
+                        {ing.name}
+                      </span>
                     </div>
-                    <span
-                      className={`recipe-page__ing-name${isChecked ? " recipe-page__ing-name--checked" : ""}`}
-                    >
-                      {ing.name}
-                    </span>
+                    {ing.amount > 0 && (
+                      <span
+                        className={`recipe-page__ing-amt${isChecked ? " recipe-page__ing-amt--checked" : ""}`}
+                      >
+                        <span className="recipe-page__ing-amt-amount">
+                          {fmtAmt(ing.amount, scale)}
+                        </span>{" "}
+                        {ing.unit}
+                      </span>
+                    )}
                   </div>
-                  {ing.amount > 0 && (
-                    <span
-                      className={`recipe-page__ing-amt${isChecked ? " recipe-page__ing-amt--checked" : ""}`}
-                    >
-                      <span className="recipe-page__ing-amt-amount">
-                        {fmtAmt(ing.amount, scale)}
-                      </span> {ing.unit}
-                    </span>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        <div
+          <div
             className="recipe-page__card recipe-page__card--steps"
             id="recipe-panel-directions"
             role={isSplit ? "tabpanel" : "region"}
-            aria-labelledby={isSplit ? "recipe-tab-directions" : "recipe-heading-directions"}
+            aria-labelledby={
+              isSplit ? "recipe-tab-directions" : "recipe-heading-directions"
+            }
             hidden={isSplit ? !showDirections : undefined}
           >
             <div className="recipe-page__block-header">
@@ -233,7 +277,11 @@ export function RecipePage({ recipe, onBack }) {
                 הוראות
               </h4>
               {doneCount > 0 && (
-                <button type="button" className="recipe-page__reset" onClick={() => setDone({})}>
+                <button
+                  type="button"
+                  className="recipe-page__reset"
+                  onClick={() => setDone({})}
+                >
                   <RotateCcw size={12} /> איפוס
                 </button>
               )}
@@ -241,7 +289,8 @@ export function RecipePage({ recipe, onBack }) {
             <div className="recipe-page__steps-list">
               {recipe.sections.map((sec, secIdx) => {
                 const showSectionHeading =
-                  recipe.sections.length > 1 && !(secIdx === 0 && sec.title === "הכנה");
+                  recipe.sections.length > 1 &&
+                  !(secIdx === 0 && sec.title === "הכנה");
                 const headingText = sec.title && sec.title.trim();
                 return (
                   <Section

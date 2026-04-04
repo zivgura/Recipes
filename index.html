@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
@@ -6,6 +6,12 @@
     <meta name="application-name" content="Recipes" />
     <meta property="og:site_name" content="Recipes" />
     <meta property="og:title" content="Recipes — המתכונים של זיו" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500&amp;family=Roboto:wght@400;700&amp;display=swap"
+    />
     <title>Recipes — המתכונים של זיו</title>
     <script type="application/ld+json">
       {
@@ -19,9 +25,19 @@
   <body>
     <div id="root">
       <!-- Static shell: OAuth / Search verification crawlers often do not run JavaScript; the app name must appear in raw HTML. -->
-      <div lang="en" dir="ltr" style="font-family: system-ui, sans-serif; padding: 1.25rem; text-align: center">
+      <div
+        lang="en"
+        dir="ltr"
+        style="
+          font-family: system-ui, sans-serif;
+          padding: 1.25rem;
+          text-align: center;
+        "
+      >
         <h1 style="font-size: 1.35rem; font-weight: 800; margin: 0">Recipes</h1>
-        <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: #555">Loading…</p>
+        <p style="margin: 0.5rem 0 0; font-size: 0.9rem; color: #555">
+          Loading…
+        </p>
       </div>
     </div>
     <script type="module" src="/src/main.jsx"></script>

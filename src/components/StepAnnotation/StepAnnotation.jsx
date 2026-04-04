@@ -14,6 +14,6 @@ export function StepAnnotation({ stepText, ingredients, scale, isDone }) {
       </span>
     ) : (
       <span key={index}>{segment.text}</span>
-    )
+    ),
   );
 }

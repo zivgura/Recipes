@@ -1,7 +1,15 @@
 import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import { ZodError } from "zod";
-import { mergeTagEmoji, deriveCategories, deriveTags } from "../lib/recipeCatalog.js";
-import { getDriveMode, getRecipesFileId, getRecipesFolderId } from "../lib/driveConfig.js";
+import {
+  mergeTagEmoji,
+  deriveCategories,
+  deriveTags,
+} from "../lib/recipeCatalog.js";
+import {
+  getDriveMode,
+  getRecipesFileId,
+  getRecipesFolderId,
+} from "../lib/driveConfig.js";
 import {
   loadRecipesFromDriveApiKey,
   loadRecipesFromDriveOAuthFile,
@@ -82,12 +90,19 @@ export function useRecipes() {
     const fileId = getRecipesFileId();
     const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
     if (!fileId || !apiKey) {
-      setState((s) => ({ ...s, status: "error", error: "Missing VITE_RECIPES_FILE_ID or VITE_GOOGLE_API_KEY" }));
+      setState((s) => ({
+        ...s,
+        status: "error",
+        error: "Missing VITE_RECIPES_FILE_ID or VITE_GOOGLE_API_KEY",
+      }));
       return;
     }
     setState((s) => ({ ...s, status: "loading", error: null }));
     try {
-      const { recipes, tagEmoji } = await loadRecipesFromDriveApiKey(fileId, apiKey);
+      const { recipes, tagEmoji } = await loadRecipesFromDriveApiKey(
+        fileId,
+        apiKey,
+      );
       const merged = mergeTagEmoji(tagEmoji);
       setState({
         status: "ready",

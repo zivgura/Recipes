@@ -3,7 +3,27 @@
  * Theme switches via `data-theme="dark"` on the document root (see App.jsx).
  */
 :root {
-  /* Brand — orange accent + teal/mint system (bright mode) */
+  --primary-dark: #199485;
+  --primary-mid: #b1e9df;
+  --primary-light: #e1f9f4;
+
+  --primary-accent: #3CB9AB;
+  --primary-accent-light: #D4F3EE;
+
+  --border-light: #5DC5B5;
+  --border-lighter: #EBF5F4;
+
+  --text-primary: #26272a;
+  --text-secondary: #656585;
+  --text-gray: #9da0a0;
+  --text-gray-2: #c5c7cb;
+
+  --background-secondary: #6565851c;
+  --background-stroke: #f8f8f8;
+  --background-page: #ffffff;
+  --background-white: #ffffff;
+
+  /* 
   --color-brand: #000000;
   --color-brand-faint: #d9f2f0;
   --color-brand-light: #87d0c9;
@@ -12,7 +32,6 @@
   --color-accent: #000001;
   --color-accent-faint: #00000111;
 
-  /* Surfaces */
   --color-page-bg: #ffffff;
   --color-card: #ffffff;
   --color-surface-muted: #f0f0f0;
@@ -21,43 +40,45 @@
   --color-sticky-header: #ffffffee;
   --color-row-pressed: #d9f2f0;
   --color-chip-surface: #c6ece8;
-  --color-header-gradient: linear-gradient(180deg, #d9f2f0 0%, #ffffff 46%);
+  --color-header-gradient: linear-gradient(
+    180deg,
+    var(--color-brand-light) 0%,
+    #ffffff 46%
+  );
 
-  /* Borders & dividers */
   --color-border: #0000000d;
   --color-border-strong: #dddddd;
 
-  /* Text */
   --color-text: #333333c9;
   --color-text-secondary: #888888;
   --color-text-muted: #999999;
   --color-text-on-brand: #ffffff;
 
-  /* Row / list (main) */
   --color-row-title: #333333;
   --color-row-meta: #888888;
   --color-row-chevron: #bbbbbb;
 
-  /* Semantic */
+
   --color-danger-soft: #ff5e5e22;
   --color-danger: #ff5e5e;
-
+*/
   /* Warnings (step) */
   --color-warning-bg: #ff8c0018;
   --color-warning-border: #ff8c0044;
   --color-warning-text: #e07000;
 
   /* Shadows */
-  --shadow-card: 0px -1px 10px 4px #00000009;
-  --shadow-card-list: 0 2px 20px #00000008;
-  --shadow-theme-toggle: 0 4px 24px #00000018;
+  --shadow-search: 0px 0px 13px 0px #5c6db31c;
 
   /* Misc */
   --color-white: #ffffff;
   --color-transparent: transparent;
 
   /* Fonts */
-  --font-family: "Nunito", sans-serif;
+  --font-family-primary: 'Open Sans';
+  --font-family-secondary: 'Roboto';
+
+  --font-size-x-small: 10px;
   --font-size-small: 12px;
   --font-size-medium: 14px;
   --font-size-large: 16px;
@@ -67,7 +88,7 @@
   --font-size-xxxx-large: 24px;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --color-brand-faint: #ff7b4530;
   --color-brand-light: #ff7b4555;
   --color-brand-border-subtle: #ff7b4544;
@@ -93,9 +114,9 @@
 
   --color-row-title: #f0faf4;
   --color-row-meta: #9e6a58;
-  --color-row-chevron: #3d6b52;
+  /* --color-row-chevron: #3d6b52; */
 
-  --shadow-card: none;
+  /* --shadow-card: none;
   --shadow-card-list: none;
-  --shadow-theme-toggle: 0 4px 24px #00000060;
+  --shadow-theme-toggle: 0 4px 24px #00000060; */
 }
