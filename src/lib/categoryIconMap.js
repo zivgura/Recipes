@@ -2,7 +2,7 @@ import allRecipesIcon from '../assets/category-icons/all-recipes-icon.svg'
 import mainDishIcon from '../assets/category-icons/main-dish-icon.svg'
 import sideDishIcon from '../assets/category-icons/side-dish-icon.svg'
 import soupsIcon from '../assets/category-icons/soups-icon.svg'
-import desertsIcon from '../assets/category-icons/deserts-icon.svg'
+import dessertsIcon from '../assets/category-icons/desserts-icon.svg'
 import partyIcon from '../assets/category-icons/party-icon.svg'
 import mexicanIcon from '../assets/category-icons/mexican-icon.svg'
 import asianIcon from '../assets/category-icons/asian-icon.svg'
@@ -13,7 +13,7 @@ const CATEGORY_ICON_SRC = {
   עיקריות: mainDishIcon,
   תוספות: sideDishIcon,
   מרקים: soupsIcon,
-  קינוחים: desertsIcon,
+  קינוחים: dessertsIcon,
   מסיבות: partyIcon,
   מקסיקני: mexicanIcon,
   אסייתי: asianIcon,
