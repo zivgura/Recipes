@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Search } from 'lucide-react'
 import { tagLabel, recipeCategoryList } from '../../lib/recipeCatalog.js'
 import { RecipeRow } from '../../components/RecipeRow/RecipeRow.jsx'
+import CategoryIcon from '../../components/CategoryIcon/CategoryIcon.jsx'
 import logo from '../../assets/logo.png'
 import icon from '../../assets/logo-image.png'
 import './MainPage.css'
@@ -29,14 +30,6 @@ export function MainPage({
       r.ingredients.some(i => i.name.toLowerCase().includes(q))
     )
   })
-
-  const grouped = allCats
-    .filter(c => c !== 'הכל')
-    .reduce((acc, cat) => {
-      const items = filtered.filter(r => recipeCategoryList(r).includes(cat))
-      if (items.length) acc.push({ cat, items })
-      return acc
-    }, [])
 
   const isFiltering = search || activeTag || activeCat !== 'הכל'
 
@@ -68,14 +61,12 @@ export function MainPage({
         <div className='main-page__filters-wrap'>
           <div className='main-page__filters'>
             {allCats.map(cat => (
-              <button
+              <CategoryIcon
                 key={cat}
-                type='button'
+                category={cat}
+                selected={activeCat === cat}
                 onClick={() => setActiveCat(cat)}
-                className={`main-page__filter${activeCat === cat ? ' main-page__filter--cat-on' : ''}`}
-              >
-                {cat}
-              </button>
+              />
             ))}
             <div className='main-page__filter-spacer' />
             {allTags.map(tag => (
@@ -121,7 +112,9 @@ export function MainPage({
           <div className='main-page__group'>
             <div className='main-page__group-label'>
               <span>המתכונים של זיו</span>
-              <span className='main-page__group-label-count'>{filtered.length} מתכונים</span>
+              <span className='main-page__group-label-count'>
+                {filtered.length} מתכונים
+              </span>
             </div>
             <div className='main-page__card-list'>
               {filtered.map(r => (

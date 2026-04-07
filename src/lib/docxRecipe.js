@@ -8,6 +8,8 @@ import { RecipeSchema } from "../schemas/recipeSchema.js";
  * - First line: recipe title (also used as title; filename is fallback).
  * - Optional rows between title and **המרכיבים** (each line starts with a known prefix):
  *   **הערה:**, **קטגוריה:** (comma-separated list), **דרגת קושי:**, **מנות:** (see `parseRecipeMetadataLines`).
+ *   Avoid a standalone line that is exactly **אופן ההכנה** here — it is treated as the instructions
+ *   header; the real header used for parsing is the first **אופן ההכנה** *after* **המרכיבים**.
  * - Block under **המרכיבים / מרכיבים** (header line): ingredient lines until **אופן ההכנה**.
  * - Block under **אופן ההכנה**: **blank lines** separate sections. Each non-empty block (one or
  *   more consecutive lines) becomes one section with a single step; optional leading `1.` / `2.`
@@ -48,13 +50,13 @@ function normalizeHeaderKey(line) {
 /** @param {string} line */
 function isIngredientsHeader(line) {
   const k = normalizeHeaderKey(line);
-  return k === "מרכיבים" || k === "המרכיבים";
+  return k.includes("מרכיבי");
 }
 
 /** @param {string} line */
 function isInstructionsHeader(line) {
   const k = normalizeHeaderKey(line);
-  return k === "אופן ההכנה" || k === "אופן הכנה";
+  return k.includes("אופן") || k.includes("הכנה");
 }
 
 /** @param {string} s */
@@ -128,7 +130,16 @@ function parseRecipeBody(text, fallbackTitle) {
   const lines = text.split(/\r?\n/).map((l) => l.trim());
 
   const ingIdx = lines.findIndex((l) => l && isIngredientsHeader(l));
-  const prepIdx = lines.findIndex((l) => l && isInstructionsHeader(l));
+  /** First «אופן ההכנה» in the file (for docs with no ingredients block). */
+  const prepIdxFirst = lines.findIndex((l) => l && isInstructionsHeader(l));
+  /**
+   * Instructions header must come *after* «המרכיבים». Otherwise a line like «אופן ההכנה»
+   * inside הערה/metadata (before ingredients) would win and break the ingredient slice.
+   */
+  const prepIdx =
+    ingIdx >= 0
+      ? lines.findIndex((l, i) => i > ingIdx && l && isInstructionsHeader(l))
+      : prepIdxFirst;
 
   if (ingIdx >= 0 && prepIdx > ingIdx) {
     const titleLines = lines.slice(0, ingIdx).filter(Boolean);
@@ -142,11 +153,11 @@ function parseRecipeBody(text, fallbackTitle) {
     return { title, ingredients, sections, ...meta };
   }
 
-  if (ingIdx < 0 && prepIdx >= 0) {
-    const titleLines = lines.slice(0, prepIdx).filter(Boolean);
+  if (ingIdx < 0 && prepIdxFirst >= 0) {
+    const titleLines = lines.slice(0, prepIdxFirst).filter(Boolean);
     const title = titleLines[0] ? normTitle(titleLines[0]) : fallbackTitle;
     const meta = parseRecipeMetadataLines(titleLines.slice(1));
-    const stepLines = lines.slice(prepIdx + 1);
+    const stepLines = lines.slice(prepIdxFirst + 1);
     let sections = parseInstructionSections(stepLines);
     sections = dropDuplicateTitleInFirstSection(sections, title);
     return { title, ingredients: [], sections, ...meta };

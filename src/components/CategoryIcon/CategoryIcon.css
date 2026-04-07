@@ -1,0 +1,47 @@
+.category-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.category-icon__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: var(--primary-mid);
+  transition: background 0.15s ease;
+}
+
+.category-icon--selected .category-icon__tile {
+  background: var(--primary-main);
+}
+
+.category-icon__img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+}
+
+.category-icon__label {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--text-secondary);
+  font-family: var(--font-family-secondary);
+}
+
+.category-icon:active .category-icon__tile {
+  filter: brightness(0.97);
+}

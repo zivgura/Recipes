@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { recipeCategoryList } from "../../lib/recipeCatalog.js";
+import { CategoryIconThumb } from "../CategoryIconThumb/CategoryIconThumb.jsx";
 import "./RecipeRow.css";
 
 export function RecipeRow({ recipe, onClick }) {
@@ -13,14 +14,22 @@ export function RecipeRow({ recipe, onClick }) {
       onPointerLeave={() => setPressed(false)}
       className={`recipe-row${pressed ? " recipe-row--pressed" : ""}`}
     >
-      <div className="recipe-row__thumb">{recipe.emoji}</div>
+      <div className="recipe-row__thumb">
+        <CategoryIconThumb
+          category={recipeCategoryList(recipe)[0] ?? "כללי"}
+        />
+      </div>
 
       <div className="recipe-row__main">
         <div className="recipe-row__title">{recipe.title}</div>
         <div className="recipe-row__meta-row">
-          <span className="recipe-row__cat">
-            {recipeCategoryList(recipe).join(" · ")}
-          </span>
+          <div className="recipe-row__cats">
+            {recipeCategoryList(recipe).map((cat, i) => (
+              <span key={`${cat}-${i}`} className="recipe-row__cat">
+                {cat}
+              </span>
+            ))}
+          </div>
           <span className="recipe-row__meta">
             {recipe.cookTime} · {recipe.ingredients.length} מצרכים
           </span>

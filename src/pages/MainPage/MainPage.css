@@ -133,7 +133,6 @@
   position: relative;
   margin-left: -20px;
   margin-right: -20px;
-  padding-left: 20px;
   padding-right: 20px;
   isolation: isolate;
 }
@@ -157,7 +156,8 @@
 
 .main-page__filters {
   display: flex;
-  gap: 8px;
+  align-items: flex-end;
+  gap: 6px;
   overflow-x: auto;
   padding-bottom: 16px;
   scrollbar-width: none;
@@ -195,12 +195,6 @@
   color: var(--text-secondary);
   font-family: var(--font-family-secondary);
   transition: all 0.15s;
-}
-
-.main-page__filter--cat-on {
-  border-color: var(--primary-dark);
-  background: var(--primary-dark);
-  color: var(--text-secondary);
 }
 
 .main-page__filter--tag-on {
