@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSwipeable } from "react-swipeable";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import { fmtAmt } from "../../utils/recipeUtils.js";
 import { recipeCategoryList } from "../../lib/recipeCatalog.js";
@@ -6,6 +7,9 @@ import { Section } from "../../components/Section/Section.jsx";
 import { Step } from "../../components/Step/Step.jsx";
 import { RecipeDone } from "../../components/RecipeDone/RecipeDone.jsx";
 import "./RecipePage.css";
+
+const EDGE_BACK_PX = 40;
+const MIN_BACK_SWIPE_PX = 56;
 
 export function RecipePage({ recipe, onBack }) {
   const [scale, setScale] = useState(1);
@@ -24,6 +28,22 @@ export function RecipePage({ recipe, onBack }) {
   const progress = doneCount / totalSteps;
   const checkedIngCount = Object.values(checkedIngs).filter(Boolean).length;
   const heroRef = useRef(null);
+
+  const edgeBack = useSwipeable({
+    onSwipedRight: (e) => {
+      if (e.initial[0] > EDGE_BACK_PX) return;
+      if (e.absX < MIN_BACK_SWIPE_PX || e.absX < e.absY) return;
+      onBack();
+    },
+    onSwipedLeft: (e) => {
+      const w = window.innerWidth;
+      if (e.initial[0] < w - EDGE_BACK_PX) return;
+      if (e.absX < MIN_BACK_SWIPE_PX || e.absX < e.absY) return;
+      onBack();
+    },
+    trackMouse: false,
+    delta: 24,
+  });
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -44,7 +64,7 @@ export function RecipePage({ recipe, onBack }) {
   }, []);
 
   return (
-    <div className="recipe-page">
+    <div className="recipe-page" {...edgeBack}>
       <div className="recipe-page__toolbar">
         <div className="recipe-page__toolbar-start">
           <button type="button" onClick={onBack} className="recipe-page__back">

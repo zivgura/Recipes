@@ -40,13 +40,39 @@ export default function App() {
       localStorage.setItem('rcp_dark', dark)
     } catch {}
   }, [dark])
+
+  useEffect(() => {
+    const onPopState = () => {
+      setPage('main')
+      setSelected(null)
+      window.scrollTo(0, 0)
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
   const openRecipe = r => {
     setSelected(r)
     setPage('recipe')
+    try {
+      window.history.pushState(
+        { recipe: true },
+        '',
+        `${window.location.pathname}${window.location.search}`
+      )
+    } catch {}
     window.scrollTo(0, 0)
   }
+
   const goBack = () => {
+    try {
+      if (window.history.state?.recipe) {
+        window.history.back()
+        return
+      }
+    } catch {}
     setPage('main')
+    setSelected(null)
     window.scrollTo(0, 0)
   }
 
