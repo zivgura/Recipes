@@ -71,7 +71,7 @@ export default function App() {
     <>
       {status === 'loading' && <LoadingPage />}
 
-      {/* {status === 'needs_auth' && <LoginPage requestLogin={requestLogin} />} */}
+      {status === 'needs_auth' && <LoginPage requestLogin={requestLogin} />}
 
       {status === 'no_access' && (
         <div className='app-fullscreen app-fullscreen--gap-md' dir='rtl'>
