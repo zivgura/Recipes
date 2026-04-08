@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { MainPage } from './pages/MainPage/MainPage.jsx'
+import { LoadingPage } from './pages/LoadingPage/LoadingPage.jsx'
 import { LoginPage } from './pages/LoginPage/LoginPage.jsx'
 import { RecipePage } from './pages/RecipePage/RecipePage.jsx'
 import { useRecipes } from './hooks/useRecipes.js'
@@ -68,22 +69,9 @@ export default function App() {
 
   return (
     <>
-      {/* <button
-        type="button"
-        onClick={() => setDark((d) => !d)}
-        className="app-theme-toggle"
-        aria-label="החלפת ערכת נושא"
-      >
-        {dark ? "☀️" : "🌙"}
-      </button> */}
+      {status === 'loading' && <LoadingPage />}
 
-      {status === 'loading' && (
-        <div className='app-loading' dir='rtl'>
-          טוען מתכונים…
-        </div>
-      )}
-
-      {status === 'needs_auth' && <LoginPage requestLogin={requestLogin} />}
+      {/* {status === 'needs_auth' && <LoginPage requestLogin={requestLogin} />} */}
 
       {status === 'no_access' && (
         <div className='app-fullscreen app-fullscreen--gap-md' dir='rtl'>
