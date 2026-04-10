@@ -52,15 +52,11 @@ export function RecipePage({ recipe, onBack }) {
     const hero = heroRef.current
     if (!hero) return
 
-    const SCROLL_START = 10
-    const SCROLL_RANGE = 200
     const TOOLBAR_SCROLL_PX = 12
 
     const onScroll = () => {
       const y = window.scrollY
       setToolbarScrolled(y > TOOLBAR_SCROLL_PX)
-      const t = Math.min(1, Math.max(0, (y - SCROLL_START) / SCROLL_RANGE))
-      hero.style.setProperty('--recipe-hero-shrink', t.toFixed(4))
     }
 
     onScroll()

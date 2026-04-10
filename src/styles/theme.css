@@ -79,8 +79,8 @@
   --color-transparent: transparent;
 
   /* Fonts */
-  --font-family-primary: 'Open Sans';
-  --font-family-secondary: 'Roboto';
+  --font-family-primary: 'Open Sans', serif;
+  --font-family-secondary: 'Roboto', serif;
 
   --font-size-x-small: 10px;
   --font-size-small: 12px;
