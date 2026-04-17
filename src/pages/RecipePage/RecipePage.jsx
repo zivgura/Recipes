@@ -12,6 +12,7 @@ import './RecipePage.css'
 
 const EDGE_BACK_PX = 40
 const MIN_BACK_SWIPE_PX = 56
+const MIN_TAB_SWIPE_PX = 48
 
 export function RecipePage({ recipe, onBack }) {
   const [scale, setScale] = useState(1)
@@ -86,6 +87,21 @@ export function RecipePage({ recipe, onBack }) {
       if (e.initial[0] < w - EDGE_BACK_PX) return
       if (e.absX < MIN_BACK_SWIPE_PX || e.absX < e.absY) return
       onBack()
+    },
+    trackMouse: false,
+    delta: 24
+  })
+
+  const tabSwipe = useSwipeable({
+    onSwipedLeft: e => {
+      if (!isSplit) return
+      if (e.absX < MIN_TAB_SWIPE_PX || e.absX < e.absY) return
+      if (recipeTab === 'ingredients') setRecipeTab('directions')
+    },
+    onSwipedRight: e => {
+      if (!isSplit) return
+      if (e.absX < MIN_TAB_SWIPE_PX || e.absX < e.absY) return
+      if (recipeTab === 'directions') setRecipeTab('ingredients')
     },
     trackMouse: false,
     delta: 24
@@ -249,7 +265,7 @@ export function RecipePage({ recipe, onBack }) {
             </div>
           </div> */}
       </div>
-      <div className='recipe-page__content' dir='rtl'>
+      <div className='recipe-page__content' dir='rtl' {...tabSwipe}>
         {isSplit && (
           <div
             ref={tabBarRef}

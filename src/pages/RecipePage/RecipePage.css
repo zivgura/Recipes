@@ -146,6 +146,7 @@
   max-width: 640px;
   margin: 0 auto;
   padding: 24px 20px 100px;
+  touch-action: pan-y;
 }
 
 .recipe-page__card {
