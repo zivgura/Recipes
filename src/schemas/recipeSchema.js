@@ -72,6 +72,11 @@ const SectionSchema = z.object({
   steps: z.array(StepSchema),
 });
 
+const IngredientSectionSchema = z.object({
+  title: z.string(),
+  ingredients: z.array(IngredientSchema),
+});
+
 const RecipeSchemaBase = z.object({
   id: z.string(),
   title: z.string(),
@@ -89,6 +94,8 @@ const RecipeSchemaBase = z.object({
   /** From מנות: in .docx; null when not specified */
   servings: z.union([z.number().int().positive(), z.null()]),
   ingredients: z.array(IngredientSchema),
+  /** When set (e.g. multi-section .docx), each group is shown under its own heading */
+  ingredientSections: z.array(IngredientSectionSchema).optional(),
   sections: z.array(SectionSchema),
 });
 

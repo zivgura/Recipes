@@ -420,6 +420,20 @@
   gap: 4px;
 }
 
+.recipe-page__ing-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recipe-page__ing-section-title {
+  font-size: var(--font-size-medium);
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-family: var(--font-family-primary);
+  margin-bottom: 10px;
+}
+
 .recipe-page__ing-list {
   display: flex;
   flex-direction: column;

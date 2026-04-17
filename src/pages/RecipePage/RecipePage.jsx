@@ -38,6 +38,10 @@ export function RecipePage({ recipe, onBack }) {
   const doneCount = Object.values(done).filter(Boolean).length
   const progress = doneCount / totalSteps
   const checkedIngCount = Object.values(checkedIngs).filter(Boolean).length
+  const ingredientBlocks =
+    recipe.ingredientSections && recipe.ingredientSections.length > 1
+      ? recipe.ingredientSections
+      : [{ title: null, ingredients: recipe.ingredients }]
   const heroRef = useRef(null)
   const [toolbarScrolled, setToolbarScrolled] = useState(false)
   const tabBarRef = useRef(null)
@@ -337,46 +341,60 @@ export function RecipePage({ recipe, onBack }) {
                 </button>
               )}
             </div>
-            <div className='recipe-page__ing-list'>
-              {recipe.ingredients.map(ing => {
-                const isChecked = checkedIngs[ing.id]
-                return (
-                  <div
-                    key={ing.id}
-                    onClick={() => toggleIngredientChecked(ing.id)}
-                    className={`recipe-page__ing${isChecked ? ' recipe-page__ing--checked' : ''}`}
-                  >
-                    <div className='recipe-page__ing-label'>
-                      <div
-                        className={`recipe-page__ing-check${isChecked ? ' recipe-page__ing-check--on' : ''}`}
-                      >
-                        {isChecked && (
-                          <img
-                            src={checkIcon}
-                            alt='checkmark'
-                            className='recipe-page__ing-check-icon'
-                          />
-                        )}
-                      </div>
-                      <span
-                        className={`recipe-page__ing-name${isChecked ? ' recipe-page__ing-name--checked' : ''}`}
-                      >
-                        {ing.name}
-                      </span>
+            <div className='recipe-page__ing-blocks'>
+              {ingredientBlocks.map((block, blockIdx) => (
+                <div
+                  key={`ing-block-${blockIdx}`}
+                  className='recipe-page__ing-block'
+                >
+                  {block.title != null && String(block.title).trim() !== '' && (
+                    <div className='recipe-page__ing-section-title'>
+                      {block.title}
                     </div>
-                    {ing.amount > 0 && (
-                      <span
-                        className={`recipe-page__ing-amt${isChecked ? ' recipe-page__ing-amt--checked' : ''}`}
-                      >
-                        <span className='recipe-page__ing-amt-amount'>
-                          {fmtAmt(ing.amount, scale)}
-                        </span>{' '}
-                        {ing.unit}
-                      </span>
-                    )}
+                  )}
+                  <div className='recipe-page__ing-list'>
+                    {block.ingredients.map(ing => {
+                      const isChecked = checkedIngs[ing.id]
+                      return (
+                        <div
+                          key={ing.id}
+                          onClick={() => toggleIngredientChecked(ing.id)}
+                          className={`recipe-page__ing${isChecked ? ' recipe-page__ing--checked' : ''}`}
+                        >
+                          <div className='recipe-page__ing-label'>
+                            <div
+                              className={`recipe-page__ing-check${isChecked ? ' recipe-page__ing-check--on' : ''}`}
+                            >
+                              {isChecked && (
+                                <img
+                                  src={checkIcon}
+                                  alt='checkmark'
+                                  className='recipe-page__ing-check-icon'
+                                />
+                              )}
+                            </div>
+                            <span
+                              className={`recipe-page__ing-name${isChecked ? ' recipe-page__ing-name--checked' : ''}`}
+                            >
+                              {ing.name}
+                            </span>
+                          </div>
+                          {ing.amount > 0 && (
+                            <span
+                              className={`recipe-page__ing-amt${isChecked ? ' recipe-page__ing-amt--checked' : ''}`}
+                            >
+                              <span className='recipe-page__ing-amt-amount'>
+                                {fmtAmt(ing.amount, scale)}
+                              </span>{' '}
+                              {ing.unit}
+                            </span>
+                          )}
+                        </div>
+                      )
+                    })}
                   </div>
-                )
-              })}
+                </div>
+              ))}
             </div>
           </div>
 

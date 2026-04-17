@@ -10,7 +10,8 @@ import { RecipeSchema } from "../schemas/recipeSchema.js";
  *   **הערה:**, **קטגוריה:** (comma-separated list), **דרגת קושי:**, **מנות:** (see `parseRecipeMetadataLines`).
  *   Avoid a standalone line that is exactly **אופן ההכנה** here — it is treated as the instructions
  *   header; the real header used for parsing is the first **אופן ההכנה** *after* **המרכיבים**.
- * - Block under **המרכיבים / מרכיבים** (header line): ingredient lines until **אופן ההכנה**.
+ * - Block under **המרכיבים / מרכיבים / מצרכי…** (header line): ingredient lines until **אופן ההכנה**.
+ *   Additional lines that look like ingredient headers (same detection) start a new subsection.
  * - Block under **אופן ההכנה**: **blank lines** separate sections. Each non-empty block (one or
  *   more consecutive lines) becomes one section with a single step; optional leading `1.` / `2.`
  *   on a line is stripped from the text.
@@ -33,6 +34,9 @@ export async function recipeFromDocxArrayBuffer(fileId, fileName, arrayBuffer) {
     servings: parsed.servings,
     ingredients: parsed.ingredients,
     sections: parsed.sections,
+    ...(parsed.ingredientSections
+      ? { ingredientSections: parsed.ingredientSections }
+      : {}),
   };
   return RecipeSchema.parse(recipe);
 }
@@ -50,7 +54,16 @@ function normalizeHeaderKey(line) {
 /** @param {string} line */
 function isIngredientsHeader(line) {
   const k = normalizeHeaderKey(line);
-  return k.includes("מרכיבי");
+  return k.includes("מרכיבי") || k.includes("מצרכי");
+}
+
+/** @param {string} line */
+function normalizeIngredientSectionTitle(line) {
+  return line
+    .replace(/\*+/g, "")
+    .trim()
+    .replace(/:+\s*$/, "")
+    .replace(/\s+/g, " ");
 }
 
 /** @param {string} line */
@@ -145,12 +158,20 @@ function parseRecipeBody(text, fallbackTitle) {
     const titleLines = lines.slice(0, ingIdx).filter(Boolean);
     const title = titleLines[0] ? normTitle(titleLines[0]) : fallbackTitle;
     const meta = parseRecipeMetadataLines(titleLines.slice(1));
-    const ingLines = lines.slice(ingIdx + 1, prepIdx).filter(Boolean);
+    const ingLines = lines.slice(ingIdx + 1, prepIdx);
     const stepLines = lines.slice(prepIdx + 1);
-    const ingredients = parseIngredientLines(ingLines);
+    const parsedIng = parseIngredientsRegion(lines[ingIdx], ingLines);
     let sections = parseInstructionSections(stepLines);
     sections = dropDuplicateTitleInFirstSection(sections, title);
-    return { title, ingredients, sections, ...meta };
+    return {
+      title,
+      ingredients: parsedIng.ingredients,
+      sections,
+      ...meta,
+      ...(parsedIng.ingredientSections
+        ? { ingredientSections: parsedIng.ingredientSections }
+        : {}),
+    };
   }
 
   if (ingIdx < 0 && prepIdxFirst >= 0) {
@@ -167,11 +188,14 @@ function parseRecipeBody(text, fallbackTitle) {
     const titleLines = lines.slice(0, ingIdx).filter(Boolean);
     const title = titleLines[0] ? normTitle(titleLines[0]) : fallbackTitle;
     const meta = parseRecipeMetadataLines(titleLines.slice(1));
-    const ingLines = lines.slice(ingIdx + 1).filter(Boolean);
-    const ingredients = parseIngredientLines(ingLines);
+    const ingLines = lines.slice(ingIdx + 1);
+    const parsedIng = parseIngredientsRegion(lines[ingIdx], ingLines);
     return {
       title,
-      ingredients,
+      ingredients: parsedIng.ingredients,
+      ...(parsedIng.ingredientSections
+        ? { ingredientSections: parsedIng.ingredientSections }
+        : {}),
       sections: [
         {
           title: "הכנה",
@@ -326,12 +350,54 @@ function parseInstructionSections(lines) {
 }
 
 /**
- * @param {string[]} lines
+ * Split the ingredients block on repeated headers (מרכיבים / מצרכי…).
+ * @param {string} firstHeaderLine
+ * @param {string[]} rawLines
+ * @returns {{ ingredients: { id: string, name: string, amount: number, unit: string }[], ingredientSections?: { title: string, ingredients: { id: string, name: string, amount: number, unit: string }[] }[] }}
  */
-function parseIngredientLines(lines) {
+function parseIngredientsRegion(firstHeaderLine, rawLines) {
+  const lines = rawLines.map((l) => String(l).trim()).filter((l) => l);
+  /** @type {{ title: string, lines: string[] }[]} */
+  const segments = [];
+  let currentTitle = normalizeIngredientSectionTitle(firstHeaderLine);
+  /** @type {string[]} */
+  let currentLines = [];
+
+  for (const line of lines) {
+    if (isIngredientsHeader(line)) {
+      if (currentLines.length > 0 || segments.length > 0) {
+        segments.push({ title: currentTitle, lines: currentLines });
+        currentLines = [];
+      }
+      currentTitle = normalizeIngredientSectionTitle(line);
+    } else {
+      currentLines.push(line);
+    }
+  }
+  segments.push({ title: currentTitle, lines: currentLines });
+
+  let idx = 0;
+  /** @type {{ title: string, ingredients: { id: string, name: string, amount: number, unit: string }[] }[]} */
+  const ingredientSections = segments.map((seg) => {
+    const ingredients = parseIngredientLines(seg.lines, idx);
+    idx += ingredients.length;
+    return { title: seg.title, ingredients };
+  });
+  const ingredients = ingredientSections.flatMap((s) => s.ingredients);
+  if (ingredientSections.length > 1) {
+    return { ingredients, ingredientSections };
+  }
+  return { ingredients };
+}
+
+/**
+ * @param {string[]} lines
+ * @param {number} [startIndex]
+ */
+function parseIngredientLines(lines, startIndex = 0) {
   /** @type {{ id: string, name: string, amount: number, unit: string }[]} */
   const out = [];
-  let idx = 0;
+  let idx = startIndex;
   for (const line of lines) {
     if (!line) continue;
     const ing = parseIngredientLine(line, idx);
